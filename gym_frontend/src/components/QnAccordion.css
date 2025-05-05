@@ -1,0 +1,33 @@
+.faq-item {
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #333;
+    margin-bottom: 10px;
+    padding: 15px 20px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .plus-icon {
+    font-size: 34px;
+    transition: transform 0.3s ease;
+  }
+  
+  .rotate {
+    transform: rotate(45deg); /* makes + become x */
+  }
+  
+  .faq-answer {
+    padding-top: 10px;
+    color: #ccc;
+    font-size: 100;
+  }
+  .faq-answer p{
+    font-size: larger;
+  }
+  

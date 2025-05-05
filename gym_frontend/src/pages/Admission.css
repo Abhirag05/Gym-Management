@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Gradient background for entire page */
+  .Container {
+    background: linear-gradient(to bottom right, #252424, #1a1a1a, #262626);
+    color: white;
+    min-height: 100vh;
+  }
+  .Admission
+  {
+    padding: 3rem 2rem;
+  }
+  
+  .Admission h1{
+    font-size:'3rem';
+    margin-bottom: '2rem';
+    margin-bottom: 2rem;
+    color: #ff4757;
+  }
+  
+  .Admission h3 {
+    color:white;
+    margin-top: 1rem;
+  }
+  
+  .Admission p{
+    color: #e0e0e0;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .Admission {
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  
+  .Admission h1{
+   text-align: left;
+  }
+  
+  .AdmissionBoxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  /* Individual facility box */
+  .FacilityBox {
+    width: 280px;
+    height: 280px;
+    border-radius: 15px;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #1e1e1e, #292929, #333333);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .AdmissionBox{
+    width: 280px;
+    height: 300px;
+    border-radius: 15px;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #1e1e1e, #292929, #333333);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: transform 0.3s ease, background 0.3s ease;
+
+  }
+  
+  .AdmissionBox:hover {
+    background: linear-gradient(135deg, #222, #2c3e50, #34495e);
+    transform: translateY(-5px);
+  }
+ 
+  .AdmissionBox h3 {
+    color:white;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+  
+  .AdmissionBox p{
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #cccccc;
+  }
+  .AdmissionBox h4 {
+    font-size: 1.2rem;
+    color: #ff4757;
+    margin-bottom: 1rem;
+  }
+  
+  .AdmissionBox ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+  }
+  
+  .AdmissionBox ul li {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #f0e9e9;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .AdmissionBox ul li::before {
+    content: "✔";
+    color: #ff4757;
+    position: absolute;
+    left: 0;
+    font-size: 1rem;
+  }
+  /* Add these styles to your existing Admission.css */
+
+.choose-plan-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .choose-plan-btn:hover {
+    background-color: #ff416c;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  }
+  
+  /* Modal backdrop */
+  .MuiBackdrop-root {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+  }
+  
+  /* Form text fields */
+  .MuiTextField-root {
+    margin-bottom: 15px !important;
+  }
+  
