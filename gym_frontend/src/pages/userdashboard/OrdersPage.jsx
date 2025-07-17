@@ -11,7 +11,7 @@ const OrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(`http://localhost:3004/orders/${user.id}`);
+        const res = await axios.get(backendURL+`/orders/${user.id}`);
         setOrders(res.data);
       } catch (err) {
         console.error('Error fetching orders:', err);
@@ -60,7 +60,7 @@ const OrdersPage = () => {
                   <ListItemAvatar>
                       <Avatar 
                         variant="square"
-                        src={`http://localhost:3004${item.imageUrl}`} 
+                        src={backendURL+`${item.imageUrl}`} 
                         alt={item.name}
                         sx={{ width: 60, height: 60, mr: 2 }}
                       />

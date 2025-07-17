@@ -72,7 +72,7 @@ const RegistrationForm = () => {
     }
 
     try {
-      await axios.post('http://localhost:3004/register/', inputs);
+      await axios.post(backendURL+'/register/', inputs);
       setNotification({
         open: true,
         message: "Registration successful! Redirecting to login...",

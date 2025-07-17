@@ -69,7 +69,7 @@ const EditProfileModal = ({ open, onClose, user, onSave }) => {
       }
 
       const response = await axios.put(
-        `http://localhost:3004/profile/${user.email}`,
+        backendURL+`/profile/${user.email}`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' }

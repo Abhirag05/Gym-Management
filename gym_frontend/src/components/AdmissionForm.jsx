@@ -254,9 +254,9 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
 
       let res;
       if (isUpdate && existingData?._id) {
-        res = await axios.put(`http://localhost:3004/changeadmission/${existingData._id}`, inputs);
+        res = await axios.put(backendURL+`/changeadmission/${existingData._id}`, inputs);
       } else {
-        res = await axios.post('http://localhost:3004/admission', inputs);
+        res = await axios.post(backendURL+'/admission', inputs);
       }
 
       setSubmitSuccess(true);

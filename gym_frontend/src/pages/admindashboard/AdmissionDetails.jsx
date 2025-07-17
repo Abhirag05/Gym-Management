@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Paper,
@@ -17,8 +17,10 @@ import {
 import { Edit, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { GymContext } from '../../context/GymContext';
 
 const AdmissionDetails = () => {
+  const{backendURL} = useContext(GymContext);
   const [admissions, setAdmissions] = useState([]);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -27,7 +29,7 @@ const AdmissionDetails = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3004/viewadmission')
+      .get(backendURL+'/viewadmission')
       .then((response) => {
         setAdmissions(response.data);
       })
@@ -39,7 +41,7 @@ const AdmissionDetails = () => {
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this admission?')) {
       axios
-        .delete(`http://localhost:3004/deleteadmission/${id}`)
+        .delete(backendURL+`/deleteadmission/${id}`)
         .then((res) => {
           alert(res.data.Message || 'Admission deleted');
           setAdmissions((prev) => prev.filter((item) => item._id !== id));

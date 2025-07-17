@@ -28,6 +28,7 @@ import GymCart from './pages/userdashboard/GymCart'
 import ProductDetails from './pages/userdashboard/ProductDetails'
 import OrdersPage from './pages/userdashboard/OrdersPage'
 import OrderDetails from './pages/admindashboard/OrderDetails'
+import GymContextProvider from './context/GymContext'
 
 
 
@@ -36,6 +37,7 @@ function App() {
  
   return (
     <>
+    <GymContextProvider>
     <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/about' element={<AboutUs/>}/>
@@ -52,6 +54,7 @@ function App() {
         <Route path="addmember" element={<AddMembers/>} />
         <Route path="contactadmin" element={<ContactDetails/>} />
         <Route path="addproduct" element={<AddProduct/>} />
+        <Route path="addproduct/:id" element={<AddProduct />} />
         <Route path="prod" element={<Products/>} />
         <Route path="orderdetails" element={<OrderDetails/>} />
         <Route index element={<Dashboard />} />
@@ -68,6 +71,7 @@ function App() {
         <Route index element={<UserProfile />} />
       </Route>
     </Routes>
+    </GymContextProvider>
     
     </>
   )

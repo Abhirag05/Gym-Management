@@ -1,8 +1,10 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { GymContext } from '../../context/GymContext';
 
 const OrderDetails = () => {
+    const{backendURL} = useContext(GymContext);
     const [orders, setOrders] = useState([]);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -12,7 +14,7 @@ const OrderDetails = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const res = await axios.get(`http://localhost:3004/vieworders`);
+                const res = await axios.get(backendURL+`/vieworders`);
                 setOrders(res.data);
             } catch (err) {
                 console.error('Error fetching orders:', err);
@@ -114,7 +116,7 @@ const OrderDetails = () => {
                                             <TableCell sx={{ color: 'white', py: isSmallScreen ? 1 : 2 }}>
                                                 {item.imageUrl && (
                                                     <img 
-                                                    src={`http://localhost:3004${item.imageUrl}`} 
+                                                    src={backendURL+`${item.imageUrl}`} 
                                                         alt={item.name} 
                                                         style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                                                     />

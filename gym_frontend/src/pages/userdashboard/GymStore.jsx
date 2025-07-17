@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -44,6 +44,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import { GymContext } from '../../context/GymContext';
 
 // Custom styled components
 const HeaderBox = styled(Box)(({ theme, headerColor }) => ({
@@ -75,6 +76,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const GymStore = () => {
+   const{backendURL} = useContext(GymContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [products, setProducts] = useState([]);
@@ -98,7 +100,7 @@ const GymStore = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3004/viewproducts');
+        const response = await axios.get(backendURL+'/viewproducts');
         const productsWithDefaults = response.data.map(product => ({
           ...product,
           rating: product.rating || 4.5,
@@ -126,7 +128,7 @@ const GymStore = () => {
 
       try {
         setCartLoading(true);
-        const res = await axios.get(`http://localhost:3004/getcart/${user.id}`);
+        const res = await axios.get(backendURL+`/getcart/${user.id}`);
         setCartItems(res.data.items || []);
       } catch (err) {
         console.error('Error fetching cart:', err);
@@ -173,13 +175,13 @@ const GymStore = () => {
     }
   
     try {
-      await axios.post('http://localhost:3004/cart', {
+      await axios.post(backendURL+'/cart', {
         userId: user.id,
         productId: product._id,
         quantity: 1
       });
       
-      const res = await axios.get(`http://localhost:3004/getcart/${user.id}`);
+      const res = await axios.get(backendURL+`/getcart/${user.id}`);
       setCartItems(res.data.items || []);
       
       showSnackbar(`${product.name} added to cart`, 'success');
@@ -193,9 +195,9 @@ const GymStore = () => {
     if (!user) return;
 
     try {
-      await axios.delete(`http://localhost:3004/removefromcart/${user.id}/${cartItemId}`);
+      await axios.delete(backendURL+`/removefromcart/${user.id}/${cartItemId}`);
       showSnackbar('Item removed from cart', 'info');
-      const res = await axios.get(`http://localhost:3004/getcart/${user.id}`);
+      const res = await axios.get(backendURL+`/getcart/${user.id}`);
       setCartItems(res.data.items || []);
     } catch (err) {
       showSnackbar('Failed to remove item from cart', 'error');
@@ -236,7 +238,7 @@ const GymStore = () => {
     }
   
     try {
-      const response = await axios.post('http://localhost:3004/checkout', {
+      const response = await axios.post(backendURL+'/checkout', {
         userId: user.id
       });
   
@@ -558,7 +560,7 @@ const GymStore = () => {
                         }}
                       >
                         <Avatar 
-                          src={`http://localhost:3004${item.productId.imageUrl}`}
+                          src={backendURL+`${item.productId.imageUrl}`}
                           alt={item.productId.name} 
                           sx={{ 
                             width: 48, 
@@ -676,7 +678,7 @@ const GymStore = () => {
                         <Box sx={{ position: 'relative', pt: '100%', }}>
                           <CardMedia
                             component="img"
-                            image={`http://localhost:3004${product.imageUrl}`}
+                            image={backendURL+`${product.imageUrl}`}
                             alt={product.name}
                             sx={{ 
                               position: 'absolute',

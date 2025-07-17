@@ -55,7 +55,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:3004/viewproducts/${productId}`);
+        const response = await axios.get(backendURL+`/viewproducts/${productId}`);
         setProduct(response.data);
       } catch (err) {
         setError(err.message);
@@ -68,7 +68,7 @@ const ProductDetails = () => {
 
   const handleAddToCart = async () => {
     try {
-      await axios.post("http://localhost:3004/cart", { 
+      await axios.post(backendURL+"/cart", { 
         userId: user.id, 
         productId: product._id, 
         quantity: 1 
@@ -177,7 +177,7 @@ const ProductDetails = () => {
               <ProductImageContainer>
                 <CardMedia
                   component="img"
-                  image={`http://localhost:3004${product.imageUrl}`}
+                  image={backendURL+`${product.imageUrl}`}
                   alt={product.name}
                   sx={{ 
                     width: '100%', 

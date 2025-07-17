@@ -19,9 +19,10 @@ import {
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { alpha, styled } from '@mui/material/styles';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GymContext } from '../../context/GymContext';
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   border: 0,
@@ -58,6 +59,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 const ContactDetails = () => {
+  const{backendURL} = useContext(GymContext);
   const [contacts, setContacts] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -67,7 +69,7 @@ const ContactDetails = () => {
 
   const delValue = (id) => {
     axios
-      .delete(`http://localhost:3004/dltmsg/${id}`)
+      .delete(backendURL+`/dltmsg/${id}`)
       .then((res) => {
         toast.success(res.data.Message, {
           position: "top-center",
@@ -94,7 +96,7 @@ const ContactDetails = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3004/viewcontact')
+      .get(backendURL+'/viewcontact')
       .then((response) => {
         setContacts(response.data);
         setLoading(false);

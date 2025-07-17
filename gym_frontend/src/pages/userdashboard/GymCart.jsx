@@ -130,7 +130,7 @@ const GymCart = ({ cart, removeFromCart, checkout }) => {
                     }}
                   >
                     <Avatar 
-                      src={`http://localhost:3004${item.imageUrl}`}
+                      src={backendURL+`${item.imageUrl}`}
                       alt={item.name} 
                       sx={{ 
                         width: 64, 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Paper,
@@ -13,14 +13,16 @@ import {
   useTheme
 } from '@mui/material';
 import axios from 'axios';
+import { GymContext } from '../../context/GymContext';
 
 const Users = () => {
+  const{backendURL} = useContext(GymContext);
   const [user, setUser] = useState([]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    axios.get('http://localhost:3004/view')
+    axios.get(backendURL+'/view')
       .then((response) => {
         setUser(response.data);
       });

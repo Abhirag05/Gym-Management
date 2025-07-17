@@ -88,7 +88,7 @@ const Contact = () => {
     }
 
     try {
-      await axios.post('http://localhost:3004/contact/', inputs);
+      await axios.post(backendURL+'/contact/', inputs);
       setNotification({
         open: true,
         message: 'Message sent successfully!',

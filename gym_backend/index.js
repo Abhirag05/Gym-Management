@@ -361,6 +361,23 @@ app.get("/viewproducts", async (req, res) => {
     res.status(500).json({ message: "Error fetching products", error });
   }
 });
+//view products to update
+app.get("/viewproducts/:id", async (req, res) => {
+  try {
+    const product = await ProductModel.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    
+    res.json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    res.status(500).json({ 
+      message: "Error fetching product details",
+      error: error.message
+    });
+  }
+});
 //delete product
 app.delete("/products/:id", async (req, res) => {
   try {
@@ -371,6 +388,57 @@ app.delete("/products/:id", async (req, res) => {
     res.status(500).json({ message: "Delete failed", error });
   }
 });
+// Update product with image handling
+app.put("/products/:id", uploads.single('image'), async (req, res) => {
+  try {
+    const product = await ProductModel.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Prepare update data
+    const updateData = {
+      name: req.body.name,
+      price: req.body.price,
+      description: req.body.description,
+      category: req.body.category,
+      stock: req.body.stock,
+      brand: req.body.brand,
+      flavors: req.body.flavors ? JSON.parse(req.body.flavors) : [],
+      sizes: req.body.sizes ? JSON.parse(req.body.sizes) : []
+    };
+
+    // Handle image update if new image is provided
+    if (req.file) {
+      // Delete old image file if exists
+      if (product.imageUrl) {
+        const oldImagePath = path.join(__dirname, product.imageUrl);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+      updateData.imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    const updatedProduct = await ProductModel.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    res.json({
+      message: "Product updated successfully",
+      product: updatedProduct
+    });
+  } catch (error) {
+    console.error("Product update error:", error);
+    res.status(500).json({ 
+      message: "Failed to update product",
+      error: error.message
+    });
+  }
+});
+
 //view product details
 app.get("/viewproducts/:id", async (req, res) => {
   try {
@@ -423,17 +491,25 @@ app.post('/cart', async (req, res) => {
 // Fix the getcart endpoint (in server.js)
 app.get('/getcart/:userId', async (req, res) => {
   try {
-    // Use the correct model name (CartModel instead of cart)
+    // Find cart and populate product details
     const cart = await CartModel.findOne({ userId: req.params.userId })
-                          .populate('items.productId');
-    
+      .populate({
+        path: 'items.productId',
+        // Explicitly handle cases where product is deleted
+        match: { _id: { $ne: null } }
+      });
+
+    // If no cart exists, return empty array
     if (!cart) {
       return res.status(200).json({ items: [] });
     }
 
-    // Format the response properly
-    res.status(200).json({
-      items: cart.items.map(item => ({
+    // Filter out any items where product was not populated (deleted products)
+    const validItems = cart.items.filter(item => item.productId);
+
+    // Format response
+    const response = {
+      items: validItems.map(item => ({
         _id: item._id,
         productId: {
           _id: item.productId._id,
@@ -444,7 +520,9 @@ app.get('/getcart/:userId', async (req, res) => {
         },
         quantity: item.quantity
       }))
-    });
+    };
+
+    res.status(200).json(response);
   } catch (err) {
     console.error('Error fetching cart:', err);
     res.status(500).json({ 

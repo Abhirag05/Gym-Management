@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { 
   Avatar, Box, Paper, Typography, Button, 
   Grid, Divider, Chip, LinearProgress, 
@@ -13,6 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 import EditProfileModal from '../../components/EditProfileModal ';
 import axios from 'axios';
+import { GymContext } from '../../context/GymContext';
 
 // Reusable Stat Card Component
 const StatCard = ({ icon, value, label, color }) => (
@@ -82,6 +83,7 @@ const ScheduleItem = ({ day, time, activity, trainer }) => (
 
 // Main UserProfile Component
 const UserProfile = () => {
+  const{backendURL} = useContext(GymContext);
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -118,7 +120,7 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3004/profile/${storedUser.email}`);
+        const response = await axios.get(backendURL+`/profile/${storedUser.email}`);
         
         setUser(prev => ({
           ...prev,
@@ -145,7 +147,7 @@ const UserProfile = () => {
   const handleSaveProfile = async (updatedUser ) => {
     try {
       const response = await axios.put(
-        `http://localhost:3004/profile/${storedUser .email}`,
+        backendURL+`/profile/${storedUser .email}`,
         updatedUser 
       );
   

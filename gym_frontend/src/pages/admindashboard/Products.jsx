@@ -1,15 +1,19 @@
 import { Delete, Edit } from '@mui/icons-material';
 import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { GymContext } from '../../context/GymContext';
 
 const Products = () => {
+  const{backendURL} = useContext(GymContext);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -17,7 +21,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:3004/viewproducts');
+      const response = await axios.get(backendURL+'/viewproducts');
       setProducts(response.data);
       setLoading(false);
     } catch (err) {
@@ -28,7 +32,7 @@ const Products = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3004/products/${id}`);
+      await axios.delete(backendURL+`/products/${id}`);
       fetchProducts(); // Refresh the list after deletion
     } catch (err) {
       setError(err.message);
@@ -36,8 +40,7 @@ const Products = () => {
   };
 
   const handleEdit = (id) => {
-    // Implement your edit logic here
-    console.log("Edit product with id:", id);
+    navigate(`/admin/addproduct/${id}`);
   };
 
   if (loading) return <Typography>Loading products...</Typography>;
@@ -146,7 +149,7 @@ const Products = () => {
                     <TableCell sx={{ color: 'white', py: isSmallScreen ? 1 : 2 }}>
                       {product.imageUrl && (
                         <img 
-                          src={`http://localhost:3004${product.imageUrl}`} 
+                          src={backendURL+`${product.imageUrl}`} 
                           alt={product.name} 
                           style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                         />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Typography,
   TextField,
@@ -14,17 +14,16 @@ import {
   Snackbar,
   Alert,
   CircularProgress,
-  Checkbox,
-  FormControlLabel,
   Divider,
   Card,
   CardContent,
   Avatar
 } from '@mui/material';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { CloudUpload, ArrowDropUp, AddPhotoAlternate } from '@mui/icons-material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { CloudUpload, AddPhotoAlternate } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import { GymContext } from '../../context/GymContext';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -39,6 +38,9 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const AddProduct = () => {
+  const{backendURL} = useContext(GymContext);
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -52,6 +54,7 @@ const AddProduct = () => {
 
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [existingImage, setExistingImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -64,11 +67,43 @@ const AddProduct = () => {
   const flavorOptions = ['Chocolate', 'Vanilla', 'Strawberry', 'Banana'];
   const sizeOptions = ['S', 'M', 'L', 'XL'];
 
+  useEffect(() => {
+    if (isEditMode) {
+      const fetchProduct = async () => {
+        try {
+          const response = await axios.get(backendURL+`/viewproducts/${id}`);
+          const product = response.data;
+          setFormData({
+            name: product.name,
+            price: product.price,
+            description: product.description,
+            category: product.category,
+            stock: product.stock,
+            brand: product.brand,
+            flavors: product.flavors || [],
+            sizes: product.sizes || [],
+          });
+          if (product.imageUrl) {
+            setExistingImage(product.imageUrl);
+            setImagePreview(backendURL+`${product.imageUrl}`);
+          }
+        } catch (err) {
+          setSnackbar({
+            open: true,
+            message: 'Failed to load product details',
+            severity: 'error'
+          });
+        }
+      };
+      fetchProduct();
+    }
+  }, [id, isEditMode]);
+
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
   };
 
@@ -81,6 +116,7 @@ const AddProduct = () => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
+      setExistingImage(null); // Clear existing image when new one is selected
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -106,19 +142,30 @@ const AddProduct = () => {
     });
   
     try {
-      await axios.post('http://localhost:3004/products', data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      setSnackbar({
-        open: true,
-        message: 'Product added successfully!',
-        severity: 'success'
-      });
+      if (isEditMode) {
+        await axios.put(backendURL+`/products/${id}`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        setSnackbar({
+          open: true,
+          message: 'Product updated successfully!',
+          severity: 'success'
+        });
+      } else {
+        await axios.post(backendURL+'/products', data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        setSnackbar({
+          open: true,
+          message: 'Product added successfully!',
+          severity: 'success'
+        });
+      }
       setTimeout(() => navigate('/admin/prod'), 500);
     } catch (error) {
       setSnackbar({
         open: true,
-        message: error.response?.data?.message || 'Failed to add product',
+        message: error.response?.data?.message || (isEditMode ? 'Failed to update product' : 'Failed to add product'),
         severity: 'error'
       });
     } finally {
@@ -137,7 +184,6 @@ const AddProduct = () => {
         mb: 4, 
         borderRadius: 3,
         boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-       
       }}>
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ 
@@ -148,7 +194,7 @@ const AddProduct = () => {
             pb: 3
           }}>
             <Avatar sx={{ 
-               background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
+              background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
               mr: 2,
               width: 56,
               height: 56
@@ -160,13 +206,13 @@ const AddProduct = () => {
                 fontWeight: 700,
                 color: 'text.primary',
               }}>
-                Add New Product
+                {isEditMode ? 'Edit Product' : 'Add New Product'}
               </Typography>
               <Typography variant="body1" sx={{ 
                 color: 'text.secondary',
                 mt: 0.5
               }}>
-                Fill in the details below to add a new product
+                {isEditMode ? 'Update the product details below' : 'Fill in the details below to add a new product'}
               </Typography>
             </Box>
           </Box>
@@ -193,7 +239,6 @@ const AddProduct = () => {
                   background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
                   borderRadius: '50%',
                   mr: 1.5,
-                  
                 }} />
                 Basic Information
               </Typography>
@@ -471,8 +516,8 @@ const AddProduct = () => {
                   variant="contained"
                   startIcon={<CloudUpload />}
                   sx={{
-                  background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
-                   color:'white',
+                    background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
+                    color:'white',
                     px: 4,
                     py: 1.5,
                     borderRadius: 2,
@@ -492,7 +537,7 @@ const AddProduct = () => {
                   />
                 </Button>
                 
-                {imagePreview && (
+                {(imagePreview || existingImage) && (
                   <Box sx={{
                     width: 150,
                     height: 150,
@@ -502,7 +547,7 @@ const AddProduct = () => {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                   }}>
                     <img 
-                      src={imagePreview} 
+                      src={imagePreview || backendURL+`${existingImage}`} 
                       alt="Preview" 
                       style={{ 
                         width: '100%', 
@@ -513,7 +558,7 @@ const AddProduct = () => {
                   </Box>
                 )}
                 
-                {!imagePreview && (
+                {!imagePreview && !existingImage && (
                   <Box sx={{
                     width: 150,
                     height: 150,
@@ -564,7 +609,7 @@ const AddProduct = () => {
                 {loading ? (
                   <CircularProgress size={24} sx={{ color: 'white' }} />
                 ) : (
-                  'Save Product'
+                  isEditMode ? 'Update Product' : 'Save Product'
                 )}
               </Button>
             </Box>

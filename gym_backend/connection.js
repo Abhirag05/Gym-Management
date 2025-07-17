@@ -1,11 +1,15 @@
-//importing
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-//connection
-mongoose.connect("mongodb+srv://abhiragsv2005:abhiragsv2005@abhirag.dttdww2.mongodb.net/userdetails?retryWrites=true&w=majority&appName=Abhirag")
-.then(()=>{
-    console.log('connected successful')
+dotenv.config(); // Load environment variables from .env
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
-.catch((err)=>{
-    console.log(err)
-})
+  .then(() => {
+    console.log("Connected to MongoDB successfully");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });

@@ -1,9 +1,11 @@
 import { Box, Button, MenuItem, TextField, Typography, Paper, Snackbar, Alert } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { GymContext } from '../../context/GymContext';
 
 const AddMembers = () => {
+  const{backendURL} = useContext(GymContext);
   const location = useLocation();
   const navigate = useNavigate();
   const editId = location.state?.id;
@@ -37,7 +39,7 @@ const AddMembers = () => {
   useEffect(() => {
     if (editId) {
       axios
-        .get(`http://localhost:3004/viewadmission/${editId}`)
+        .get(backendURL+`/viewadmission/${editId}`)
         .then((res) => {
           setInputs(res.data);
         })
@@ -122,10 +124,10 @@ const AddMembers = () => {
 
     try {
       if (editId) {
-        await axios.put(`http://localhost:3004/updateadmission/${editId}`, inputs);
+        await axios.put(backendURL+`/updateadmission/${editId}`, inputs);
         showNotification('Member updated successfully!');
       } else {
-        await axios.post('http://localhost:3004/admission/', inputs);
+        await axios.post(backendURL+'/admission/', inputs);
         showNotification('Member added successfully!');
       }
 

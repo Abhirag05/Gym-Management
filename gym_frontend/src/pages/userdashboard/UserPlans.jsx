@@ -87,7 +87,7 @@ const UserPlans = () => {
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to cancel this membership?')) {
       axios
-        .delete(`http://localhost:3004/deleteadmission/${id}`)
+        .delete(backendURL+`/deleteadmission/${id}`)
         .then((res) => {
           setSnackbar({ open: true, message: res.data.Message || 'Membership canceled successfully.', severity: 'success' });
           localStorage.removeItem('admission');
@@ -111,14 +111,27 @@ const UserPlans = () => {
   };
 
   const calculateDaysLeft = (startDate) => {
-    const start = new Date(startDate);
-    const end = new Date(start);
-    end.setMonth(end.getMonth() + 1);
-    const today = new Date();
-    const diffTime = end - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
-  };
+  // Parse the start date
+  const start = new Date(startDate);
+  
+  // Create end date (exactly 30 days later)
+  const end = new Date(start);
+  end.setDate(end.getDate() + 30);
+  
+  // Get current date (at midnight to ignore time)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  // If current date is after end date, return 0
+  if (today >= end) return 0;
+  
+  // Calculate difference in days
+  const diffTime = end - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  // Ensure we don't return more than 30 days
+  return Math.min(diffDays, 30);
+};
 
   return (
     <Box

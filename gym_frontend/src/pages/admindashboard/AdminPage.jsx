@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -15,24 +15,25 @@ import {
   Avatar,
   Divider,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
-  Dashboard as DashboardIcon,
   Assignment as AssignmentIcon,
   People as PeopleIcon,
   ChevronLeft as ChevronLeftIcon,
 } from '@mui/icons-material';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import logo from '../../assets/logo.jpg';
-import Dashboard from './dashboard';
-import Users from './Users';
-import AdmissionDetails from './AdmissionDetails';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddIcon from '@mui/icons-material/Add';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+
+import logo from '../../assets/logo.jpg';
+
 const drawerWidth = 240;
 
 const navItems = [
@@ -46,10 +47,16 @@ const navItems = [
   { text: 'Order Details', icon: <LocalMallIcon />, path: '/admin/orderdetails' },
 ];
 
-
 const AdminPage = () => {
   const location = useLocation();
-  const [open, setOpen] = useState(true);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [open, setOpen] = useState(!isMobile); // Closed on mobile, open on desktop
+
+  // Sync state when screen size changes
+  useEffect(() => {
+    setOpen(!isMobile);
+  }, [isMobile]);
 
   const toggleDrawer = () => {
     setOpen((prev) => !prev);
@@ -64,7 +71,7 @@ const AdminPage = () => {
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          background: `linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2e2e2e 50%, #1a1a1a 75%, #000000 100%)`,
+          background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2e2e2e 50%, #1a1a1a 75%, #000000 100%)',
         }}
       >
         <Toolbar>
@@ -105,41 +112,42 @@ const AdminPage = () => {
           </Typography>
 
           <Link to="/sign">
-  <Button
-    variant="contained"
-    sx={{
-      background: 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)',
-      color: 'white',
-      fontWeight: 'bold',
-      borderRadius: '8px',
-      textTransform: 'none',
-      padding: '8px 22px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      transition: 'all 0.3s ease',
-      '&:hover': {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
-        background: 'linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%)',
-      },
-      '&:active': {
-        transform: 'translateY(0)',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      },
-    }}
-    startIcon={
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M16 17L21 12M21 12L16 7M21 12H9M13 7V5C13 4.46957 12.7893 3.96086 12.4142 3.58579C12.0391 3.21071 11.5304 3 11 3H5C4.46957 3 3.96086 3.21071 3.58579 3.58579C3.21071 3.96086 3 4.46957 3 5V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H11C11.5304 21 12.0391 20.7893 12.4142 20.4142C12.7893 20.0391 13 19.5304 13 19V17" 
-              stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    }
-  >
-    Logout
-  </Button>
-</Link>
+            <Button
+              variant="contained"
+              sx={{
+                background: 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)',
+                color: 'white',
+                fontWeight: 'bold',
+                borderRadius: '8px',
+                textTransform: 'none',
+                padding: '8px 22px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
+                  background: 'linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%)',
+                },
+              }}
+              startIcon={
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 17L21 12M21 12L16 7M21 12H9M13 7V5C13 4.46957 12.7893 3.96086 
+                  12.4142 3.58579C12.0391 3.21071 11.5304 3 11 3H5C4.46957 3 3.96086 3.21071 
+                  3.58579 3.58579C3.21071 3.96086 3 4.46957 3 5V19C3 19.5304 3.21071 20.0391 
+                  3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H11C11.5304 21 12.0391 
+                  20.7893 12.4142 20.4142C12.7893 20.0391 13 19.5304 13 19V17"
+                        stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              }
+            >
+              Logout
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
 
-      {/* Main Layout */}
+      {/* Layout */}
       <Box sx={{ display: 'flex', flexGrow: 1, pt: '64px' }}>
         {/* Sidebar */}
         <Drawer
@@ -174,9 +182,7 @@ const AdminPage = () => {
                   px: 2,
                   py: 1.5,
                   color: 'white',
-                  '&:hover': {
-                    backgroundColor: '#333',
-                  },
+                  '&:hover': { backgroundColor: '#333' },
                   '&.Mui-selected': {
                     backgroundColor: '#ff416c',
                     '&:hover': { backgroundColor: '#ff416c' },
@@ -184,7 +190,14 @@ const AdminPage = () => {
                 }}
               >
                 <Tooltip title={!open ? item.text : ''} placement="right">
-                  <ListItemIcon sx={{ color: '#fff', minWidth: 0, mr: open ? 2 : 'auto', justifyContent: 'center' }}>
+                  <ListItemIcon
+                    sx={{
+                      color: '#fff',
+                      minWidth: 0,
+                      mr: open ? 2 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
                     {item.icon}
                   </ListItemIcon>
                 </Tooltip>
@@ -194,7 +207,7 @@ const AdminPage = () => {
           </List>
         </Drawer>
 
-        {/* Page Content */}
+        {/* Main Content */}
         <Box
           component="main"
           sx={{
@@ -204,12 +217,9 @@ const AdminPage = () => {
             minHeight: 'calc(100vh - 64px)',
           }}
         >
-          
           <Outlet />
-
         </Box>
       </Box>
-
     </Box>
   );
 };

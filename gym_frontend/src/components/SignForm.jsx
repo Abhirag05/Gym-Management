@@ -1,9 +1,13 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GymContext } from '../context/GymContext';
+
 
 const SignForm = () => {
+  const{backendURL} = useContext(GymContext);
+
   const [inputs, setInputs] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
@@ -14,13 +18,13 @@ const SignForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3004/login', inputs);
+      const res = await axios.post(backendURL+'/login', inputs);
       const user = res.data.user;
       localStorage.setItem('user', JSON.stringify(user));
       
 
       try {
-        const admissionRes = await axios.get(`http://localhost:3004/getAdmissionByEmail/${user.email}`);
+        const admissionRes = await axios.get(backendURL+`/getAdmissionByEmail/${user.email}`);
         if (admissionRes.status === 200 && admissionRes.data) {
           localStorage.setItem('admission', JSON.stringify(admissionRes.data));
         }
