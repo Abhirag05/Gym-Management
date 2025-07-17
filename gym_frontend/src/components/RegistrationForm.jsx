@@ -1,9 +1,11 @@
 import { Box, Button, TextField, Typography, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GymContext } from '../context/GymContext';
 
 const RegistrationForm = () => {
+  const{backendURL} = useContext(GymContext);
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
