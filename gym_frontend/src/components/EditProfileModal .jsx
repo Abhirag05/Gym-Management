@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   Modal, Box, TextField, Button, Avatar,
   Typography, IconButton, Divider, Snackbar, Alert
 } from '@mui/material';
 import { CloudUpload, Close } from '@mui/icons-material';
 import axios from 'axios';
+import { GymContext } from '../context/GymContext';
 
 const EditProfileModal = ({ open, onClose, user, onSave }) => {
+  const{backendURL} = useContext(GymContext);
   const [editedUser, setEditedUser] = useState(user);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
