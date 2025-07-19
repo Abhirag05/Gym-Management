@@ -31,7 +31,7 @@ var app=express()
 app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",  // Local development
-  "https://your-vercel-app-url.vercel.app"  // Your live Vercel URL
+  "https://gym-management-slff.vercel.app"  // Your live Vercel URL
 ];
 
 app.use(cors({
