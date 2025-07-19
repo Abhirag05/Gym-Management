@@ -29,10 +29,20 @@ const upload = multer({
 });
 var app=express()
 app.use(cookieParser());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://gym-management-slff.vercel.app"
+];
+
 app.use(cors({
-  origin: "https://gym-management-black.vercel.app",
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'), false);
+  },
   credentials: true
 }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use((err, req, res, next) => {
   console.error('Server error:', err.stack);
