@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { GymContext } from '../context/GymContext';
 import axios from 'axios';
 
+
 const AuthWrapper = ({ children }) => {
   const { backendURL } = useContext(GymContext);
   const navigate = useNavigate();

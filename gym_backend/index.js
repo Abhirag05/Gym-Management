@@ -102,7 +102,7 @@ app.post('/login', async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true, // true in production (HTTPS)
-      sameSite: "Strict"
+      sameSite: "None"
     });
 
     res.json({
