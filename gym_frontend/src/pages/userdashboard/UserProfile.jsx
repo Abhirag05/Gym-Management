@@ -10,7 +10,7 @@ import {
   LocalFireDepartment, TrendingUp, 
   AccessTime
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import EditProfileModal from '../../components/EditProfileModal ';
 import axios from 'axios';
 import { GymContext } from '../../context/GymContext';
@@ -84,6 +84,7 @@ const ScheduleItem = ({ day, time, activity, trainer }) => (
 // Main UserProfile Component
 const UserProfile = () => {
   const{backendURL} = useContext(GymContext);
+   const navigate = useNavigate();
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -120,17 +121,17 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(backendURL+`/profile/${storedUser.email}`);
+        const response = await axios.get(`${backendURL}/profile/${storedUser.email}`, {
+          withCredentials: true
+        });
         
-        setUser(prev => ({
-          ...prev,
+        setUser({
           ...response.data,
           joinDate: new Date(response.data.joinDate).toLocaleDateString()
-        }));
+        });
       } catch (error) {
         console.error('Error fetching profile:', error);
         setError('Failed to load profile data');
-        // If API fails, use data from localStorage
         setUser(prev => ({
           ...prev,
           name: storedUser.name,
@@ -142,8 +143,7 @@ const UserProfile = () => {
     };
 
     fetchUserProfile();
-  }, [storedUser.email]);
-
+  }, [backendURL, storedUser.email]);
   const handleSaveProfile = async (updatedUser ) => {
     try {
       const response = await axios.put(

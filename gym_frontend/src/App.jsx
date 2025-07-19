@@ -29,7 +29,7 @@ import ProductDetails from './pages/userdashboard/ProductDetails'
 import OrdersPage from './pages/userdashboard/OrdersPage'
 import OrderDetails from './pages/admindashboard/OrderDetails'
 import GymContextProvider from './context/GymContext'
-
+import AuthWrapper from './components/AuthWrapper'
 
 
 function App() {
@@ -59,7 +59,9 @@ function App() {
         <Route path="orderdetails" element={<OrderDetails/>} />
         <Route index element={<Dashboard />} />
       </Route>
-      <Route path='/user' element={<UserPage/>}>
+      <Route path='/user' element={<AuthWrapper>
+      <UserPage />
+     </AuthWrapper>}>
         <Route path="profile" element={<UserProfile/>} />
         <Route path="useradmission" element={<UserAdmission/>} />
         <Route path="userplans" element={<UserPlans/>} />

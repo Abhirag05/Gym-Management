@@ -15,33 +15,48 @@ const SignForm = () => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await axios.post(`${backendURL}/login`, inputs, {
+      withCredentials: true // ✅ Send cookies with the request
+    });
+
+    const user = res.data.user;
+
+    // ✅ Store only non-sensitive info (no password)
+    localStorage.setItem('user', JSON.stringify({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin
+    }));
+
     try {
-      const res = await axios.post(backendURL+'/login', inputs);
-      const user = res.data.user;
-      localStorage.setItem('user', JSON.stringify(user));
-      
+      const admissionRes = await axios.get(`${backendURL}/getAdmissionByEmail/${user.email}`, {
+        withCredentials: true // ✅ Include token cookie in protected request
+      });
 
-      try {
-        const admissionRes = await axios.get(backendURL+`/getAdmissionByEmail/${user.email}`);
-        if (admissionRes.status === 200 && admissionRes.data) {
-          localStorage.setItem('admission', JSON.stringify(admissionRes.data));
-        }
-      } catch (err) {
-        localStorage.removeItem('admission');
-      }
-
-      if (user.isAdmin) {
-        navigate('/admin');
-      } else {
-        navigate('/user');
+      if (admissionRes.status === 200 && admissionRes.data) {
+        localStorage.setItem('admission', JSON.stringify(admissionRes.data));
       }
     } catch (err) {
-      console.error("Login Error:", err);
-      alert('Invalid email or password');
+      localStorage.removeItem('admission');
     }
-  };
+
+    // ✅ Redirect based on role
+    if (user.isAdmin) {
+      navigate('/admin');
+    } else {
+      navigate('/user');
+    }
+
+  } catch (err) {
+    console.error("Login Error:", err);
+    alert('Invalid email or password');
+  }
+};
+
 
   return (
     <div

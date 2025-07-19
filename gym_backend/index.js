@@ -1,6 +1,10 @@
 const express=require('express')
 const cors=require('cors')
 require("./connection") 
+require('dotenv').config();
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const secretKey = process.env.JWT_SECRET;
 const UserModel=require("./models/users")
 const AdmissionModel = require('./models/admissions')
 const ContactModel = require("./models/contact"); 
@@ -8,6 +12,8 @@ const ProductModel = require("./models/products");
 const CartModel = require("./models/carts"); 
 const OrderModel = require("./models/orders"); 
 const multer = require('multer');
+
+
 
 const upload = multer({
   limits: {
@@ -22,13 +28,44 @@ const upload = multer({
   }
 });
 var app=express()
+app.use(cookieParser());
+const allowedOrigins = [
+  "http://localhost:5173",  // Local development
+  "https://your-vercel-app-url.vercel.app"  // Your live Vercel URL
+];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  exposedHeaders: ['set-cookie']
+}));
 app.use(express.json({ limit: '10mb' }));
-app.use(cors())
 app.use((err, req, res, next) => {
   console.error('Server error:', err.stack);
   res.status(500).send('Something broke!');
 });
+//  JWT verification middleware
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    req.user = decoded;
+    next();
+  } catch {
+    return res.status(403).json({ message: "Invalid token" });
+  }
+};
 //user authentication
   app.post("/register",async(req,res)=>{
     try {
@@ -41,35 +78,61 @@ app.use((err, req, res, next) => {
 })
 //user authorization
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      const user = await UserModel.findOne({ email });
-      if (!user) {
-        return res.status(400).json({ message: 'User not found' });
-      }
-      if (user.password !== password) {
-        return res.status(400).json({ message: 'Incorrect password' });
-      }
-      let avatar = null;
+  const { email, password } = req.body;
+
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    if (user.password !== password) {
+      return res.status(400).json({ message: 'Incorrect password' });
+    }
+
+    // Generate token
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      secretKey,
+      { expiresIn: '1h' }
+    );
+
+    // Create avatar string
+    let avatar = null;
     if (user.avatar && user.avatar.data) {
       avatar = `data:${user.avatar.contentType};base64,${user.avatar.data.toString('base64')}`;
     }
-      res.json({
-        message: 'Login successful',
-        user: {
-          id: user._id,
-          name:user.name,
-          email:user.email,
-          password:user.password,
-          isAdmin: user.isAdmin,
-          avatar: avatar
-        }
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Server error', error });
-    }
-  });
+
+    // Send token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true, // true in production (HTTPS)
+      sameSite: "Strict"
+    });
+
+    res.json({
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: avatar,
+        isAdmin: user.isAdmin
+      }
+    });
+
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+app.post('/logout', (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None"
+  }).json({ message: "Logged out successfully" });
+});
   //viewing registered users
   app.get("/view", async (req, res) => {
     try {
@@ -200,7 +263,7 @@ app.delete("/deleteadmission/:id", async (req, res) => {
 });
 
 // Get user profile by email
-app.get('/profile/:email', async (req, res) => {
+app.get('/profile/:email', verifyToken, async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.params.email });
     if (!user) {
