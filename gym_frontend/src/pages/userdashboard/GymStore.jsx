@@ -231,24 +231,35 @@ const GymStore = () => {
   };
 
   const checkout = async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
-      showSnackbar('Please login to checkout', 'error');
-      return;
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    showSnackbar('Please login to checkout', 'error');
+    return;
+  }
+
+  try {
+    setCartLoading(true);
+    const response = await axios.post(`${backendURL}/checkout`, {
+      userId: user.id
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    showSnackbar('Order placed successfully!', 'success');
+    setCartItems([]);
+    setShowCart(false); // Close cart after successful checkout
+  } catch (err) {
+    console.error('Checkout error:', err);
+    showSnackbar('Failed to place order', 'error');
+    if (err.response) {
+      console.error('Server response:', err.response.data);
     }
-  
-    try {
-      const response = await axios.post(backendURL+'/checkout', {
-        userId: user.id
-      });
-  
-      showSnackbar('Order placed successfully!', 'success');
-      setCartItems([]);
-    } catch (err) {
-      showSnackbar('Failed to place order', 'error');
-      console.error('Checkout error:', err);
-    }
-  };
+  } finally {
+    setCartLoading(false);
+  }
+};
 
   const categories = [
     { id: 'all', name: 'All Products', image: '/p.webp' },

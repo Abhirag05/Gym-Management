@@ -1,62 +1,67 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GymContext } from '../context/GymContext';
 
-
 const SignForm = () => {
-  const{backendURL} = useContext(GymContext);
-
+  const { backendURL } = useContext(GymContext);
   const [inputs, setInputs] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const inputHandler = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post(`${backendURL}/login`, inputs, {
-      withCredentials: true // ✅ Send cookies with the request
-    });
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
-    const user = res.data.user;
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
-    // ✅ Store only non-sensitive info (no password)
-    localStorage.setItem('user', JSON.stringify({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin
-    }));
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const admissionRes = await axios.get(`${backendURL}/getAdmissionByEmail/${user.email}`, {
-        withCredentials: true // ✅ Include token cookie in protected request
+      const res = await axios.post(`${backendURL}/login`, inputs, {
+        withCredentials: true
       });
 
-      if (admissionRes.status === 200 && admissionRes.data) {
-        localStorage.setItem('admission', JSON.stringify(admissionRes.data));
+      const user = res.data.user;
+
+      localStorage.setItem('user', JSON.stringify({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin
+      }));
+
+      try {
+        const admissionRes = await axios.get(`${backendURL}/getAdmissionByEmail/${user.email}`, {
+          withCredentials: true
+        });
+
+        if (admissionRes.status === 200 && admissionRes.data) {
+          localStorage.setItem('admission', JSON.stringify(admissionRes.data));
+        }
+      } catch (err) {
+        localStorage.removeItem('admission');
       }
+
+      if (user.isAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/user');
+      }
+
     } catch (err) {
-      localStorage.removeItem('admission');
+      console.error("Login Error:", err);
+      alert('Invalid email or password');
     }
-
-    // ✅ Redirect based on role
-    if (user.isAdmin) {
-      navigate('/admin');
-    } else {
-      navigate('/user');
-    }
-
-  } catch (err) {
-    console.error("Login Error:", err);
-    alert('Invalid email or password');
-  }
-};
-
+  };
 
   return (
     <div
@@ -77,11 +82,12 @@ const SignForm = () => {
             width: '100%',
             background: 'rgba(0, 0, 0, 0.65)',
             borderRadius: '12px',
-            padding: '2.5rem',
+            padding: { xs: '1.5rem', sm: '2.5rem' },
             boxShadow: '0px 6px 30px rgba(0,0,0,0.6)',
             color: 'white',
-            WebkitBackdropFilter: 'blur(10px)',
-            boxSizing: 'border-box'
+           
+            boxSizing: 'border-box',
+            position: 'relative'
           }}
         >
           <Typography
@@ -108,6 +114,16 @@ const SignForm = () => {
             onChange={inputHandler}
             InputProps={{ style: { color: 'white' } }}
             InputLabelProps={{ style: { color: '#ccc' } }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#444',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#ff416c',
+                },
+              }
+            }}
           />
 
           <TextField
@@ -117,11 +133,36 @@ const SignForm = () => {
             margin="normal"
             required
             fullWidth
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={inputs.password}
             onChange={inputHandler}
-            InputProps={{ style: { color: 'white' } }}
+            InputProps={{
+              style: { color: 'white' },
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                    sx={{ color: '#ccc' }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
             InputLabelProps={{ style: { color: '#ccc' } }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#444',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#ff416c',
+                },
+              }
+            }}
           />
 
           <Button
@@ -130,6 +171,7 @@ const SignForm = () => {
             fullWidth
             sx={{
               mt: 3,
+              py: 1.5,
               backgroundColor: 'white',
               color: '#ff416c',
               fontWeight: 'bold',

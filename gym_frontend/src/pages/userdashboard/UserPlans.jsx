@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Paper,
@@ -35,6 +35,7 @@ import {
 import { styled } from '@mui/system';
 import AdmissionForm from '../../components/AdmissionForm';
 import axios from 'axios';
+import { GymContext } from '../../context/GymContext';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: '#1e1e1e',
@@ -62,6 +63,7 @@ const UserPlans = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const{backendURL} = useContext(GymContext);
 
   useEffect(() => {
     const userData = localStorage.getItem('user');

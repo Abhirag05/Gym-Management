@@ -289,6 +289,9 @@ app.get('/profile/:email', verifyToken, async (req, res) => {
 // In your server.js - Update the PUT /profile/:email endpoint
 app.put('/profile/:email', upload.single('avatar'), async (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     const { age, weight, height } = req.body;
     const updateData = { age, weight, height };
     
@@ -549,24 +552,20 @@ app.post('/cart', async (req, res) => {
 // Fix the getcart endpoint (in server.js)
 app.get('/getcart/:userId', async (req, res) => {
   try {
-    // Find cart and populate product details
     const cart = await CartModel.findOne({ userId: req.params.userId })
       .populate({
         path: 'items.productId',
-        // Explicitly handle cases where product is deleted
-        match: { _id: { $ne: null } }
+        match: { _id: { $ne: null } } // Only populate non-null products
       });
 
-    // If no cart exists, return empty array
     if (!cart) {
       return res.status(200).json({ items: [] });
     }
 
-    // Filter out any items where product was not populated (deleted products)
+    // Filter out any items where product was not populated
     const validItems = cart.items.filter(item => item.productId);
 
-    // Format response
-    const response = {
+    res.status(200).json({
       items: validItems.map(item => ({
         _id: item._id,
         productId: {
@@ -578,9 +577,7 @@ app.get('/getcart/:userId', async (req, res) => {
         },
         quantity: item.quantity
       }))
-    };
-
-    res.status(200).json(response);
+    });
   } catch (err) {
     console.error('Error fetching cart:', err);
     res.status(500).json({ 
@@ -589,7 +586,6 @@ app.get('/getcart/:userId', async (req, res) => {
     });
   }
 });
-
 //remove product details from cart
 app.delete('/removefromcart/:userId/:cartItemId', async (req, res) => {
   const { userId, cartItemId } = req.params;
@@ -636,18 +632,36 @@ app.delete('/clearcart/:userId', async (req, res) => {
 
 //adding orderdetails
 // Create a proper order from cart
+// In your server.js
 app.post('/checkout', async (req, res) => {
   try {
     const { userId } = req.body;
 
-    // 1. Get user's cart
-    const cart = await CartModel.findOne({ userId }).populate('items.productId');
-    if (!cart || cart.items.length === 0) {
-      return res.status(400).json({ message: 'Cart is empty' });
+    // Validate input
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
     }
 
-    // 2. Prepare order data
-    const orderItems = cart.items.map(item => ({
+    // Get cart with populated products, filtering out any invalid references
+    const cart = await CartModel.findOne({ userId })
+      .populate({
+        path: 'items.productId',
+        match: { _id: { $ne: null } } // Only populate non-null products
+      });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    // Filter out any items where product is null (was deleted)
+    const validItems = cart.items.filter(item => item.productId);
+
+    if (validItems.length === 0) {
+      return res.status(400).json({ message: 'No valid items in cart' });
+    }
+
+    // Prepare order items
+    const orderItems = validItems.map(item => ({
       productId: item.productId._id,
       name: item.productId.name,
       price: item.productId.price,
@@ -655,10 +669,11 @@ app.post('/checkout', async (req, res) => {
       imageUrl: item.productId.imageUrl
     }));
 
-    const total = cart.items.reduce((sum, item) => 
+    // Calculate total
+    const total = validItems.reduce((sum, item) => 
       sum + (item.productId.price * item.quantity), 0);
 
-    // 3. Create order
+    // Create order
     const order = new OrderModel({
       userId,
       items: orderItems,
@@ -668,7 +683,7 @@ app.post('/checkout', async (req, res) => {
 
     await order.save();
 
-    // 4. Clear cart
+    // Clear cart (only the valid items)
     await CartModel.findOneAndUpdate(
       { userId },
       { $set: { items: [] } }
@@ -681,7 +696,10 @@ app.post('/checkout', async (req, res) => {
 
   } catch (error) {
     console.error('Checkout error:', error);
-    res.status(500).json({ message: 'Checkout failed', error });
+    res.status(500).json({ 
+      message: 'Checkout failed',
+      error: error.message 
+    });
   }
 });
 

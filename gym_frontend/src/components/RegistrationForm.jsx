@@ -1,4 +1,5 @@
-import { Box, Button, TextField, Typography, Snackbar, Alert } from '@mui/material';
+import { Box, Button, TextField, Typography, Snackbar, Alert, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material'; // Import the eye icons
 import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,6 +15,12 @@ const RegistrationForm = () => {
     message: "",
     severity: "success"
   });
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+
+  // Toggle password visibility
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const validateField = (name, value) => {
     let error = "";
@@ -161,13 +168,27 @@ const RegistrationForm = () => {
             margin="normal"
             required
             fullWidth
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={inputs.password}
             onChange={inputHandler}
             onBlur={handleBlur}
             error={!!errors.password}
             helperText={errors.password}
-            InputProps={{ style: { color: 'white' } }}
+            InputProps={{ 
+              style: { color: 'white' },
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                    sx={{ color: '#ccc' }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
             InputLabelProps={{ style: { color: '#ccc' } }}
           />
 

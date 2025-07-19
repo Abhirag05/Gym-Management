@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, Button, TextField, Typography, Modal, MenuItem, Alert, Collapse, FormControlLabel, Checkbox, CircularProgress } from '@mui/material';
 import axios from 'axios';
+import { GymContext } from '../context/GymContext';
 
 const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} }) => {
+  const{backendURL} = useContext(GymContext);
   const [inputs, setInputs] = useState({
     fullname: '',
     email: '',
@@ -224,14 +226,13 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
     setPaymentStep(false);
   };
 
-  const mockPaymentProcessing = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const isSuccess = Math.random() < 0.8;
-        resolve(isSuccess);
-      }, 2000);
-    });
-  };
+ const mockPaymentProcessing = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true); // Always return true
+    }, 2000);
+  });
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -4,13 +4,15 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Avatar } from '@mui/material';
+import { Avatar, IconButton } from '@mui/material';
 import logo from '../assets/logo.jpg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 import SignForm from '../components/SignForm';
 import RegistrationForm from '../components/RegistrationForm';
+import { ArrowBack } from '@mui/icons-material';
 const Registration = () => {
+  const navigate = useNavigate();
   return (
     <div className='Container'>
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -45,6 +47,15 @@ const Registration = () => {
 
       `}</style>
       <Toolbar>
+                     <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="back"
+                        onClick={() => navigate('/')}
+                        sx={{ mr: 2 }}
+                      >
+                        <ArrowBack />
+                     </IconButton>
       <Avatar
           alt="Fit For Fight Logo" 
           src={logo}
@@ -76,20 +87,25 @@ const Registration = () => {
     </AppBar>
   </Box>
    <Box
-          sx={{
+        sx={{
             flex: 1,
             position: 'relative',
-            height: '100vh', 
-            minHeight: '700px',  
-            backgroundImage: 'url(gym1.jpg)',
+            minHeight: 'calc(100vh - 128px)',
+            background: `
+              linear-gradient(
+                rgba(7, 13, 19, 0.9), 
+                rgba(10, 25, 41, 0.9)
+              ),
+              url('gym1.jpg')
+            `,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            filter: 'brightness(0.7)',
+            backgroundAttachment: 'fixed',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            padding: 2
           }}
         >
           

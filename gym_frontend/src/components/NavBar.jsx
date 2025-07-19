@@ -67,11 +67,12 @@ const NavBar = () => {
             />
             <Typography variant="h5" component="div" sx={{
               fontWeight: 'bold',
-              color: 'error',
+               color: 'white',
               letterSpacing: '1px',
               textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
               '@media (max-width: 600px)': {
-                fontSize: '1.5rem',
+                fontSize: '1.2rem',
+                 color: '#ff416c',
               }
             }}>
               Fit For Fight
