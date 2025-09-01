@@ -10,6 +10,8 @@ const productController = {
         return res.status(400).json({ message: "No image uploaded" });
       }
 
+      // For serverless deployment, store image as base64 or use cloud storage
+      // For now, we'll store a placeholder since file system is not available
       const productData = {
         name: req.body.name,
         price: req.body.price,
@@ -19,7 +21,7 @@ const productController = {
         brand: req.body.brand,
         flavors: req.body.flavors ? JSON.parse(req.body.flavors) : [],
         sizes: req.body.sizes ? JSON.parse(req.body.sizes) : [],
-        imageUrl: `/uploads/${req.file.filename}`
+        imageUrl: req.file ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` : null
       };
 
       const newProduct = new Product(productData);
@@ -87,14 +89,8 @@ const productController = {
 
       // Handle image update if new image is provided
       if (req.file) {
-        // Delete old image file if exists
-        if (product.imageUrl) {
-          const oldImagePath = path.join(__dirname, '../../uploads', path.basename(product.imageUrl));
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
-        }
-        updateData.imageUrl = `/uploads/${req.file.filename}`;
+        // For serverless deployment, store image as base64
+        updateData.imageUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
       }
 
       const updatedProduct = await Product.findByIdAndUpdate(
