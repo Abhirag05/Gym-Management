@@ -53,7 +53,7 @@ const Dashboard = () => {
             { title: "Total Trainers", desc: "12 certified professionals in strength, combat & yoga." },
             { title: "Total Programs", desc: "Over 8+ programs including Combat, Yoga, Strength & HIIT." },
           ].map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Card
                 sx={{
                   backgroundColor: '#2c2c2c',

@@ -74,7 +74,8 @@ const EditProfileModal = ({ open, onClose, user, onSave }) => {
         backendURL+`/profile/${user.email}`,
         formData,
         {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true
         }
       );
 

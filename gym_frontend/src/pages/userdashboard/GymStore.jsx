@@ -128,7 +128,9 @@ const GymStore = () => {
 
       try {
         setCartLoading(true);
-        const res = await axios.get(backendURL+`/getcart/${user.id}`);
+        const res = await axios.get(backendURL+`/getcart/${user.id}`, {
+          withCredentials: true
+        });
         setCartItems(res.data.items || []);
       } catch (err) {
         console.error('Error fetching cart:', err);
@@ -179,6 +181,8 @@ const GymStore = () => {
         userId: user.id,
         productId: product._id,
         quantity: 1
+      }, {
+        withCredentials: true
       });
       
       const res = await axios.get(backendURL+`/getcart/${user.id}`);
@@ -195,7 +199,9 @@ const GymStore = () => {
     if (!user) return;
 
     try {
-      await axios.delete(backendURL+`/removefromcart/${user.id}/${cartItemId}`);
+      await axios.delete(backendURL+`/removefromcart/${user.id}/${cartItemId}`, {
+        withCredentials: true
+      });
       showSnackbar('Item removed from cart', 'info');
       const res = await axios.get(backendURL+`/getcart/${user.id}`);
       setCartItems(res.data.items || []);
@@ -273,7 +279,7 @@ const GymStore = () => {
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Grid container spacing={3}>
           {[...Array(6)].map((_, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Skeleton variant="rectangular" height={200} />
               <Box sx={{ pt: 0.5 }}>
                 <Skeleton />
@@ -666,7 +672,7 @@ const GymStore = () => {
         ) : (
           <Grid container spacing={4}>
             {/* Product Grid */}
-            <Grid item xs={12} md={9}>
+            <Grid size={{ xs: 12, md: 9 }}>
               <Box sx={{ 
                 display: 'flex', 
                 justifyContent: 'space-between',
@@ -684,7 +690,7 @@ const GymStore = () => {
               {filteredProducts.length > 0 ? (
                 <Grid container spacing={3}>
                   {filteredProducts.map(product => (
-                    <Grid item xs={12} sm={6} lg={4} key={product._id} sx={{height:'540px',width:'auto'}}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={product._id} sx={{height:'540px',width:'auto'}}>
                       <ProductCard>
                         <Box sx={{ position: 'relative', pt: '100%', }}>
                           <CardMedia

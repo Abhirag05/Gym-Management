@@ -144,7 +144,8 @@ const AddProduct = () => {
     try {
       if (isEditMode) {
         await axios.put(backendURL+`/products/${id}`, data, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true
         });
         setSnackbar({
           open: true,
@@ -153,7 +154,8 @@ const AddProduct = () => {
         });
       } else {
         await axios.post(backendURL+'/products', data, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true
         });
         setSnackbar({
           open: true,
@@ -244,7 +246,7 @@ const AddProduct = () => {
               </Typography>
               
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     fullWidth
                     label="Product Name"
@@ -262,7 +264,7 @@ const AddProduct = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     fullWidth
                     label="Brand Name"
@@ -280,7 +282,7 @@ const AddProduct = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
                     <Select
@@ -302,7 +304,7 @@ const AddProduct = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     fullWidth
                     label="Price ($)"
@@ -346,7 +348,7 @@ const AddProduct = () => {
               </Typography>
               
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     fullWidth
                     label="Stock Quantity"
@@ -365,7 +367,7 @@ const AddProduct = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel>Tags</InputLabel>
                     <Select
@@ -403,7 +405,7 @@ const AddProduct = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel>Sizes</InputLabel>
                     <Select

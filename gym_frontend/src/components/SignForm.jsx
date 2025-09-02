@@ -184,9 +184,9 @@ const SignForm = () => {
             Sign In
           </Button>
 
-          <Typography variant="body2" sx={{ mt: 2, textAlign: 'left' }}>
+          <Typography variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
             <Link to="" style={{ color: '#ccc', textDecoration: 'none' }}>
-              <p style={{ textAlign: 'center' }}>Forgot Password?</p>
+              Forgot Password?
             </Link>
           </Typography>
 

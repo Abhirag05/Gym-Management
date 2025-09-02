@@ -204,7 +204,7 @@ const UserPlans = () => {
           {/* Member Details */}
           <Grid container spacing={3}>
             {/* Left Section */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               {/* Details */}
               <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', color: '#ff9eaa', width: '500px' }}>
                 <Person sx={{ mr: 1 }} /> Member Details
@@ -251,7 +251,7 @@ const UserPlans = () => {
             </Grid>
 
             {/* Right Section */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               {/* Plan Features */}
               <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', color: '#ff9eaa' }}>
                 <LocalOffer sx={{ mr: 1 }} /> Plan Features

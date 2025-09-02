@@ -148,7 +148,10 @@ const UserProfile = () => {
     try {
       const response = await axios.put(
         backendURL+`/profile/${storedUser .email}`,
-        updatedUser 
+        updatedUser,
+        {
+          withCredentials: true
+        }
       );
   
       // Update user state with the new avatar data
@@ -198,7 +201,7 @@ const UserProfile = () => {
     >
       <Grid container spacing={3}>
         {/* Header Section */}
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
               Welcome back, <span style={{ color: '#ff416c' }}>{user.name}</span>
@@ -213,7 +216,7 @@ const UserProfile = () => {
         </Grid>
 
         {/* Profile Card */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Paper
             elevation={6}
             sx={{
@@ -283,10 +286,10 @@ const UserProfile = () => {
         </Grid>
 
         {/* Stats Section */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Grid container spacing={3}>
             {/* Quick Stats */}
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Paper
                 elevation={6}
                 sx={{
@@ -299,7 +302,7 @@ const UserProfile = () => {
                   Your Stats
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<FitnessCenter />} 
                       value={stats.workoutsCompleted} 
@@ -307,7 +310,7 @@ const UserProfile = () => {
                       color="#ff416c"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<LocalFireDepartment />} 
                       value={stats.caloriesBurned} 
@@ -315,7 +318,7 @@ const UserProfile = () => {
                       color="#ff9e2c"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<TrendingUp />} 
                       value={stats.streak} 
@@ -323,7 +326,7 @@ const UserProfile = () => {
                       color="#4caf50"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<AccessTime />} 
                       value={stats.nextSession} 
@@ -336,7 +339,7 @@ const UserProfile = () => {
             </Grid>
 
             {/* Progress Section */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Paper
                 elevation={6}
                 sx={{
@@ -356,7 +359,7 @@ const UserProfile = () => {
             </Grid>
 
             {/* Upcoming Schedule */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Paper
                 elevation={6}
                 sx={{

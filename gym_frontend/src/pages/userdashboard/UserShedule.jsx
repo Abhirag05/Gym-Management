@@ -33,7 +33,7 @@ const DayCard = ({ day, activities, icon }) => {
   }[day.split('–')[1].trim()] || <FitnessCenter fontSize="large" />;
 
   return (
-    <Grid item xs={12} sm={6} md={4}>
+    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
       <StyledCard>
         <CardContent sx={{ padding: '24px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -291,7 +291,7 @@ const UserSchedule = () => {
               <Divider sx={{ backgroundColor: '#444', mb: 3 }} />
               <Grid container spacing={2}>
                 {workoutPlan?.nutritionTips.map((tip, i) => (
-                  <Grid item xs={12} sm={6} key={i}>
+                  <Grid size={{ xs: 12, sm: 6 }} key={i}>
                     <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
                       <Restaurant sx={{ color: '#ff416c', mr: 2, mt: 0.5 }} />
                       <Typography variant="body1" sx={{ color: '#ddd' }}>

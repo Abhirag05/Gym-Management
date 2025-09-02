@@ -3,15 +3,20 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper, List, ListItem, Divider, Chip, ListItemAvatar, Avatar } from '@mui/material';
 import { LocalShipping, CheckCircle, AccessTime } from '@mui/icons-material';
 import axios from 'axios';
+import { useContext } from 'react';
+import { GymContext } from '../../context/GymContext';
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
+  const { backendURL } = useContext(GymContext);
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(backendURL+`/orders/${user.id}`);
+        const res = await axios.get(backendURL+`/orders/${user.id}`, {
+          withCredentials: true
+        });
         setOrders(res.data);
       } catch (err) {
         console.error('Error fetching orders:', err);

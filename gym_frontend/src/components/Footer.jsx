@@ -16,7 +16,7 @@ const Footer = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           {/* Column 1 - About */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="h6" gutterBottom>
               Fit For Fight
             </Typography>
@@ -27,7 +27,7 @@ const Footer = () => {
           </Grid>
 
           {/* Column 2 - Quick Links */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="h6" gutterBottom>
               Quick Links
             </Typography>
@@ -43,7 +43,7 @@ const Footer = () => {
           </Grid>
 
           {/* Column 3 - Contact */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="h6" gutterBottom>
               Contact Us
             </Typography>
@@ -59,7 +59,7 @@ const Footer = () => {
           </Grid>
 
           {/* Column 4 - Social Media */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="h6" gutterBottom>
               Follow Us
             </Typography>

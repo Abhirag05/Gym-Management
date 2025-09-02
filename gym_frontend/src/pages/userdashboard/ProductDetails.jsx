@@ -5,7 +5,9 @@ import {
   IconButton, TextField, styled, useMediaQuery, useTheme, Badge, Chip, 
   Rating, Divider, Alert, Breadcrumbs, Link, Snackbar 
 } from '@mui/material'; 
-import axios from 'axios'; 
+import axios from 'axios';
+import { useContext } from 'react';
+import { GymContext } from '../../context/GymContext'; 
 import { Search, ShoppingCart, Close, Favorite, FavoriteBorder, Share } from '@mui/icons-material';
 
 const ProfessionalHeaderBox = styled(Box)(({ theme }) => ({
@@ -31,6 +33,7 @@ const ProductImageContainer = styled(Box)(({ theme }) => ({
 
 const ProductDetails = () => {
   const { productId } = useParams();
+  const { backendURL } = useContext(GymContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [product, setProduct] = useState(null);
@@ -72,6 +75,8 @@ const ProductDetails = () => {
         userId: user.id, 
         productId: product._id, 
         quantity: 1 
+      }, {
+        withCredentials: true
       });
       showSnackbar(`${product.name} added to cart`, 'success');
     } catch (error) {
