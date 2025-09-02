@@ -173,7 +173,6 @@ const AdminPage = () => {
           <List>
             {navItems.map((item) => (
               <ListItem
-                button
                 key={item.text}
                 component={Link}
                 to={item.path}

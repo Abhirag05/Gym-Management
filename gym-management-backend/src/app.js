@@ -99,7 +99,7 @@ app.get('/viewadmission/:id', verifyToken, admissionController.getAdmissionById)
 app.put('/updateadmission/:id', verifyToken, admissionController.updateAdmission);
 app.put('/changeadmission/:id', verifyToken, admissionController.updateAdmission);
 app.get('/getAdmissionByEmail/:email', verifyToken, admissionController.getAdmissionByEmail);
-app.delete('/deleteadmission/:id', verifyToken, verifyAdmin, admissionController.deleteAdmission);
+app.delete('/deleteadmission/:id', verifyToken, admissionController.deleteAdmission);
 
 // Contact routes
 app.post('/contact', contactController.createContact);

@@ -89,7 +89,7 @@ const UserPlans = () => {
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to cancel this membership?')) {
       axios
-        .delete(backendURL+`/deleteadmission/${id}`)
+        .delete(backendURL+`/deleteadmission/${id}`, { withCredentials: true })
         .then((res) => {
           setSnackbar({ open: true, message: res.data.Message || 'Membership canceled successfully.', severity: 'success' });
           localStorage.removeItem('admission');

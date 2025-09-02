@@ -79,11 +79,18 @@ const admissionController = {
   // Delete admission
   deleteAdmission: async (req, res) => {
     try {
-      const deleted = await Admission.findByIdAndDelete(req.params.id);
-      if (!deleted) {
+      const admission = await Admission.findById(req.params.id);
+      if (!admission) {
         return res.status(404).json({ message: "Admission not found" });
       }
-      res.json({ message: "Admission deleted successfully" });
+
+      // Allow users to delete their own admission or admin to delete any
+      if (req.user && (req.user.isAdmin || admission.email === req.user.email)) {
+        const deleted = await Admission.findByIdAndDelete(req.params.id);
+        res.json({ message: "Admission deleted successfully" });
+      } else {
+        return res.status(403).json({ message: "Access denied. You can only cancel your own membership." });
+      }
     } catch (error) {
       console.error('Delete admission error:', error);
       res.status(500).json({ message: "Delete failed", error: error.message });

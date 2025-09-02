@@ -199,7 +199,7 @@ const UserAdmission = () => {
       </Box>
 
       {/* Modal Form */}
-      <AdmissionForm open={openForm} handleClose={handleCloseForm} plan={selectedPlan} />
+      <AdmissionForm open={openForm} handleClose={handleCloseForm} selectedPlan={selectedPlan} />
     </div>
   );
 };

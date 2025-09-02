@@ -29,7 +29,7 @@ router.get('/viewadmission/:id', verifyToken, admissionController.getAdmissionBy
 router.put('/updateadmission/:id', verifyToken, admissionController.updateAdmission);
 router.put('/changeadmission/:id', verifyToken, admissionController.updateAdmission);
 router.get('/getAdmissionByEmail/:email', verifyToken, admissionController.getAdmissionByEmail);
-router.delete('/deleteadmission/:id', verifyToken, verifyAdmin, admissionController.deleteAdmission);
+router.delete('/deleteadmission/:id', verifyToken, admissionController.deleteAdmission);
 
 // Legacy contact routes
 router.post('/contact', contactController.createContact);

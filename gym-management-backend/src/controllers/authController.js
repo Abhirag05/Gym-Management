@@ -34,7 +34,7 @@ const authController = {
 
       // Generate token
       const token = jwt.sign(
-        { id: user._id, isAdmin: user.isAdmin },
+        { id: user._id, email: user.email, isAdmin: user.isAdmin },
         JWT_CONFIG.secret,
         { expiresIn: JWT_CONFIG.expiresIn }
       );

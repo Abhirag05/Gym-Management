@@ -9,6 +9,6 @@ router.get('/', verifyToken, verifyAdmin, admissionController.getAllAdmissions);
 router.get('/:id', verifyToken, admissionController.getAdmissionById);
 router.get('/email/:email', verifyToken, admissionController.getAdmissionByEmail);
 router.put('/:id', verifyToken, admissionController.updateAdmission);
-router.delete('/:id', verifyToken, verifyAdmin, admissionController.deleteAdmission);
+router.delete('/:id', verifyToken, admissionController.deleteAdmission);
 
 module.exports = router;

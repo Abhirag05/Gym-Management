@@ -1,21 +1,42 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Button, TextField, Typography, Modal, MenuItem, Alert, Collapse, FormControlLabel, Checkbox, CircularProgress } from '@mui/material';
+import {
+  Modal,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  MenuItem,
+  Alert,
+  Collapse,
+  CircularProgress,
+  FormControlLabel,
+  Checkbox
+} from '@mui/material';
 import axios from 'axios';
 import { GymContext } from '../context/GymContext';
+import { useNavigate } from 'react-router-dom';
 
-const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} }) => {
-  const{backendURL} = useContext(GymContext);
+const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {}, selectedPlan = null }) => {
+  const { backendURL } = useContext(GymContext);
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     fullname: '',
     email: '',
     phonenumber: '',
     fitnessgoal: '',
-    selectedplan: '',
+    selectedplan: selectedPlan || '',
     payment: {
       method: 'online',
       status: 'completed'
     }
   });
+
+  const planPrices = {
+    'Basic Plan': 999,
+    'Pro Plan': 1499,
+    'Premium Plan': 1999,
+    'Personal Training': 2999
+  };
 
   const [errors, setErrors] = useState({
     fullname: '',
@@ -43,14 +64,15 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const planPrices = {
-    'Basic Plan': 999,
-    'Premium Plan': 1499,
-    'Pro Plan': 1999,
-    'Personal Training': 2999
-  };
+  
 
   useEffect(() => {
+    if (selectedPlan) {
+      setInputs(prev => ({
+        ...prev,
+        selectedplan: selectedPlan
+      }));
+    }
     if (isUpdate && existingData) {
       setInputs({
         fullname: existingData.fullname || '',
@@ -60,7 +82,7 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
         selectedplan: existingData.selectedplan || '',
       });
     }
-  }, [isUpdate, existingData]);
+  }, [isUpdate, existingData, selectedPlan]);
 
   const validateField = (name, value) => {
     let error = '';
@@ -79,7 +101,6 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
         else if (!/^\d{10}$/.test(value)) error = 'Phone number must be 10 digits';
         break;
       case 'fitnessgoal':
-      case 'selectedplan':
         if (!value) error = 'This field is required';
         break;
       default:
@@ -218,7 +239,7 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
     if (validateForm()) {
       setPaymentStep(true);
     } else {
-      setSubmitError('Please fix all errors before proceeding to payment');
+      setSubmitError('Please fill all fields before proceeding to payment');
     }
   };
 
@@ -255,7 +276,7 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
 
       let res;
       if (isUpdate && existingData?._id) {
-        res = await axios.put(backendURL+`/changeadmission/${existingData._id}`, inputs);
+        res = await axios.put(backendURL+`/changeadmission/${existingData._id}`, inputs, { withCredentials: true });
       } else {
         res = await axios.post(backendURL+'/admission', inputs);
       }
@@ -266,6 +287,10 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
         setSubmitSuccess(false);
         setPaymentStep(false);
         setIsProcessing(false);
+        if (!isUpdate) {
+          // Redirect to membership status page after successful admission
+          navigate('/user/userplans');
+        }
       }, 1500);
     } catch (err) {
       console.error('Error:', err);
@@ -394,7 +419,7 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
 
             <TextField
               name="selectedplan"
-              label="Select Plan"
+              label="Membership Plan"
               select
               fullWidth
               required
@@ -405,7 +430,10 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
               error={!!errors.selectedplan}
               helperText={errors.selectedplan}
               InputLabelProps={{ style: { color: '#ccc' } }}
-              InputProps={{ style: { color: 'white' } }}
+              InputProps={{ 
+                style: { color: 'white' },
+                readOnly: !isUpdate && selectedPlan // Read-only if not updating and plan is pre-selected
+              }}
               sx={{
                 '& .MuiInputBase-root': {
                   '@media (max-width: 400px)': {
@@ -414,12 +442,19 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
                 }
               }}
             >
-              <MenuItem value="Basic Plan">Basic Plan - ${planPrices['Basic Plan']}/month</MenuItem>
-              <MenuItem value="Premium Plan">Premium Plan - ${planPrices['Premium Plan']}/month</MenuItem>
-              <MenuItem value="Pro Plan">Pro Plan - ${planPrices['Pro Plan']}/month</MenuItem>
-              <MenuItem value="Personal Training">Personal Training - ${planPrices['Personal Training']}/month</MenuItem>
+              <MenuItem value="Basic Plan">Basic Plan - ₹999/month</MenuItem>
+              <MenuItem value="Pro Plan">Pro Plan - ₹1499/month</MenuItem>
+              <MenuItem value="Premium Plan">Premium Plan - ₹1999/month</MenuItem>
             </TextField>
 
+            {inputs.selectedplan && !isUpdate && selectedPlan && (
+              <Box sx={{ mt: 1, p: 2, backgroundColor: 'rgba(255, 65, 108, 0.1)', borderRadius: 1, border: '1px solid rgba(255, 65, 108, 0.3)' }}>
+                <Typography variant="body2" sx={{ color: '#ff416c', fontStyle: 'italic' }}>
+                  Plan pre-selected from pricing card
+                </Typography>
+              </Box>
+            )}
+            
             <Button
               type="submit"
               fullWidth
@@ -448,7 +483,7 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
             </Typography>
             
             <Typography variant="subtitle1" gutterBottom sx={{ '@media (max-width: 600px)': { fontSize: '0.9rem' } }}>
-              Plan: {inputs.selectedplan} - ${planPrices[inputs.selectedplan]}/month
+              Plan: {inputs.selectedplan} - ₹{planPrices[inputs.selectedplan]}/month
             </Typography>
 
             <TextField
@@ -623,7 +658,7 @@ const AdmissionForm = ({ open, handleClose, isUpdate = false, existingData = {} 
                 {isProcessing ? (
                   <CircularProgress size={24} color="inherit" />
                 ) : (
-                  `Pay $${planPrices[inputs.selectedplan]}`
+                  `Pay ₹${planPrices[inputs.selectedplan]}`
                 )}
               </Button>
             </Box>

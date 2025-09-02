@@ -47,7 +47,7 @@ import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { GymContext } from '../../context/GymContext';
 
 // Custom styled components
-const HeaderBox = styled(Box)(({ theme, headerColor }) => ({
+const HeaderBox = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2e2e2e 50%, #1a1a1a 75%, #000000 100%)`,
   color: theme.palette.common.white,
   padding: theme.spacing(4),
@@ -91,7 +91,6 @@ const GymStore = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [headerColor, setHeaderColor] = useState('');
   const [showCart, setShowCart] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
   const navigate = useNavigate();
@@ -323,7 +322,7 @@ const GymStore = () => {
       backgroundColor: theme.palette.background.default,
     }}>
       {/* Header Section */}
-      <HeaderBox headerColor={headerColor}>
+      <HeaderBox>
         <Container maxWidth="xl">
           <Box sx={{ 
             display: 'flex', 
@@ -444,7 +443,7 @@ const GymStore = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
           <Grid container spacing={3} sx={{ maxWidth: '100%', width: 'fit-content', px: 2 }}>
             {categories.map((cat) => (
-              <Grid item key={cat.id}>
+              <Grid key={cat.id}>
                 <Card
                   onClick={() => setSelectedCategory(cat.id)}
                   sx={{
