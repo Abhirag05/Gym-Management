@@ -184,7 +184,7 @@ const GymStore = () => {
         withCredentials: true
       });
       
-      const res = await axios.get(backendURL+`/getcart/${user.id}`);
+      const res = await axios.get(backendURL+`/getcart/${user.id}`, { withCredentials: true });
       setCartItems(res.data.items || []);
       
       showSnackbar(`${product.name} added to cart`, 'success');
@@ -202,7 +202,7 @@ const GymStore = () => {
         withCredentials: true
       });
       showSnackbar('Item removed from cart', 'info');
-      const res = await axios.get(backendURL+`/getcart/${user.id}`);
+      const res = await axios.get(backendURL+`/getcart/${user.id}`, { withCredentials: true });
       setCartItems(res.data.items || []);
     } catch (err) {
       showSnackbar('Failed to remove item from cart', 'error');
@@ -249,7 +249,8 @@ const GymStore = () => {
     }, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      withCredentials: true
     });
     
     showSnackbar('Order placed successfully!', 'success');
@@ -266,19 +267,13 @@ const GymStore = () => {
   }
 };
 
-  const categories = [
-    { id: 'all', name: 'All Products', image: '/p.webp' },
-    { id: 'supplements', name: 'Supplements', image: '/sup.webp' },
-    { id: 'accessories', name: 'Accessories', image: '/acc.jpg' },
-    { id: 'wearings', name: 'Apparel', image: '/wea.webp' }
-  ];
 
   if (loading) {
     return (
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Grid container spacing={3}>
           {[...Array(6)].map((_, index) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
               <Skeleton variant="rectangular" height={200} />
               <Box sx={{ pt: 0.5 }}>
                 <Skeleton />
@@ -439,65 +434,6 @@ const GymStore = () => {
       </HeaderBox>
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        {/* Category Cards */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-          <Grid container spacing={3} sx={{ maxWidth: '100%', width: 'fit-content', px: 2 }}>
-            {categories.map((cat) => (
-              <Grid key={cat.id}>
-                <Card
-                  onClick={() => setSelectedCategory(cat.id)}
-                  sx={{
-                    cursor: 'pointer',
-                    height: 150,
-                    width: 200,
-                    position: 'relative',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    boxShadow: selectedCategory === cat.id ? 4 : 2,
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'scale(1.03)',
-                      boxShadow: 6
-                    }
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="100%"
-                    image={cat.image}
-                    alt={cat.name}
-                    sx={{
-                      filter: selectedCategory === cat.id ? 'brightness(100%)' : 'brightness(80%)',
-                      transition: 'filter 0.3s ease'
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      bgcolor: 'rgba(0,0,0,0.5)',
-                      color: 'white',
-                      p: 2,
-                      textAlign: 'center'
-                    }}
-                  >
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      {cat.name}
-                    </Typography>
-                    {selectedCategory === cat.id && (
-                      <Typography variant="caption">
-                        {filteredProducts.length} items
-                      </Typography>
-                    )}
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
         {/* Main Content - Products or Cart based on state */}
         {showCart ? (
           <Paper elevation={2} sx={{ 
@@ -669,9 +605,8 @@ const GymStore = () => {
             )}
           </Paper>
         ) : (
-          <Grid container spacing={4}>
-            {/* Product Grid */}
-            <Grid size={{ xs: 12, md: 9 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <Box sx={{ width: '100%', maxWidth: '1200px' }}>
               <Box sx={{ 
                 display: 'flex', 
                 justifyContent: 'space-between',
@@ -687,9 +622,9 @@ const GymStore = () => {
               </Box>
 
               {filteredProducts.length > 0 ? (
-                <Grid container spacing={3}>
+                <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
                   {filteredProducts.map(product => (
-                    <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={product._id} sx={{height:'540px',width:'auto'}}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product._id} sx={{height:'540px',width:'auto'}}>
                       <ProductCard>
                         <Box sx={{ position: 'relative', pt: '100%', }}>
                           <CardMedia
@@ -864,8 +799,8 @@ const GymStore = () => {
                   </Button>
                 </Paper>
               )}
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         )}
       </Container>
 

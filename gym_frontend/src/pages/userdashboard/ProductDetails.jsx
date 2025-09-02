@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'; 
+import { useParams, useNavigate } from 'react-router-dom'; 
 import { useState, useEffect } from 'react'; 
 import { 
   Button, CircularProgress, Typography, Paper, Box, CardMedia, Container, 
@@ -8,7 +8,7 @@ import {
 import axios from 'axios';
 import { useContext } from 'react';
 import { GymContext } from '../../context/GymContext'; 
-import { Search, ShoppingCart, Close, Favorite, FavoriteBorder, Share } from '@mui/icons-material';
+import { Search, ShoppingCart, Close, Favorite, FavoriteBorder, Share, ArrowBack } from '@mui/icons-material';
 
 const ProfessionalHeaderBox = styled(Box)(({ theme }) => ({
   background: theme.palette.background.paper,
@@ -34,6 +34,7 @@ const ProductImageContainer = styled(Box)(({ theme }) => ({
 const ProductDetails = () => {
   const { productId } = useParams();
   const { backendURL } = useContext(GymContext);
+  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [product, setProduct] = useState(null);
@@ -135,6 +136,22 @@ const ProductDetails = () => {
             justifyContent: 'space-between',
             gap: 3
           }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Button
+                startIcon={<ArrowBack />}
+                onClick={() => navigate('/user/gymstore')}
+                sx={{
+                  color: 'primary.main',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  '&:hover': {
+                    backgroundColor: 'rgba(25, 118, 210, 0.04)'
+                  }
+                }}
+              >
+                Back to Store
+              </Button>
+            </Box>
             <Box>
               <Typography variant="h3" sx={{ 
                 fontWeight: 700,
