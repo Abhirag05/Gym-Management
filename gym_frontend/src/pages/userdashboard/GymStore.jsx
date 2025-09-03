@@ -519,7 +519,7 @@ const GymStore = () => {
                         }}
                       >
                         <Avatar 
-                          src={backendURL+`${item.productId.imageUrl}`}
+                          src={`${backendURL}${item.productId.imageUrl?.startsWith('/') ? item.productId.imageUrl : '/' + item.productId.imageUrl}`}
                           alt={item.productId.name} 
                           sx={{ 
                             width: 48, 
@@ -636,7 +636,7 @@ const GymStore = () => {
                         <Box sx={{ position: 'relative', pt: '100%', }}>
                           <CardMedia
                             component="img"
-                            image={backendURL+`${product.imageUrl}`}
+                            image={`${backendURL}${product.imageUrl?.startsWith('/') ? product.imageUrl : '/' + product.imageUrl}`}
                             alt={product.name}
                             sx={{ 
                               position: 'absolute',

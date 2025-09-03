@@ -141,7 +141,7 @@ const GymCart = ({ cart, removeFromCart, checkout }) => {
                     }}
                   >
                     <Avatar 
-                      src={backendURL+`${item.imageUrl}`}
+                      src={`${backendURL}${item.imageUrl?.startsWith('/') ? item.imageUrl : '/' + item.imageUrl}`}
                       alt={item.name} 
                       sx={{ 
                         width: isMobile ? 48 : 64, 
