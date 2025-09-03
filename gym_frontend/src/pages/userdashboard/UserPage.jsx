@@ -95,8 +95,8 @@ const UserPage = () => {
             src={logo}
             sx={{
               mr: 2,
-              width: 60,
-              height: 60,
+              width: { xs: 45, sm: 60 },
+              height: { xs: 45, sm: 60 },
               border: '2px solid #fff',
               transition: '0.3s',
               '&:hover': { transform: 'scale(1.05)' },
@@ -104,13 +104,14 @@ const UserPage = () => {
           />
 
           <Typography
-            variant="h5"
+            variant={isMobile ? 'h6' : 'h5'}
             sx={{
               flexGrow: 1,
               fontWeight: 'bold',
               color: 'error.main',
               letterSpacing: '1px',
               textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+              fontSize: { xs: '1.1rem', sm: '1.5rem' }
             }}
           >
             Fit For Fight
@@ -142,8 +143,9 @@ const UserPage = () => {
 
       <Box sx={{ display: 'flex', flexGrow: 1, pt: '64px' }}>
         <Drawer
-          variant="permanent"
+          variant={isMobile ? 'temporary' : 'permanent'}
           open={open}
+          onClose={toggleDrawer}
           sx={{
             width: open ? drawerWidth : 60,
             flexShrink: 0,
@@ -152,7 +154,7 @@ const UserPage = () => {
             [`& .MuiDrawer-paper`]: {
               transition: '0.3s',
               overflowX: 'hidden',
-              width: open ? drawerWidth : 60,
+              width: isMobile ? drawerWidth : (open ? drawerWidth : 60),
               backgroundColor: '#1a1a1a',
               color: '#fff',
               borderRight: '1px solid #2e2e2e',

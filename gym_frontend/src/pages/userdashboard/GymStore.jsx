@@ -50,8 +50,14 @@ import { GymContext } from '../../context/GymContext';
 const HeaderBox = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2e2e2e 50%, #1a1a1a 75%, #000000 100%)`,
   color: theme.palette.common.white,
-  padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
+  padding: theme.spacing(2, 2, 3, 2),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(4)
+  },
+  marginBottom: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    marginBottom: theme.spacing(4)
+  },
   boxShadow: theme.shadows[4]
 }));
 
@@ -76,7 +82,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const GymStore = () => {
-   const{backendURL} = useContext(GymContext);
+  const { backendURL } = useContext(GymContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [products, setProducts] = useState([]);
@@ -99,7 +105,7 @@ const GymStore = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(backendURL+'/viewproducts');
+        const response = await axios.get(backendURL + '/viewproducts');
         const productsWithDefaults = response.data.map(product => ({
           ...product,
           rating: product.rating || 4.5,
@@ -127,7 +133,7 @@ const GymStore = () => {
 
       try {
         setCartLoading(true);
-        const res = await axios.get(backendURL+`/getcart/${user.id}`, {
+        const res = await axios.get(backendURL + `/getcart/${user.id}`, {
           withCredentials: true
         });
         setCartItems(res.data.items || []);
@@ -151,20 +157,20 @@ const GymStore = () => {
   // Filter products based on search term and category
   useEffect(() => {
     let result = products;
-    
+
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      result = result.filter(product => 
+      result = result.filter(product =>
         product.name.toLowerCase().includes(term) ||
         (product.description && product.description.toLowerCase().includes(term)) ||
         (product.brand && product.brand.toLowerCase().includes(term))
       );
     }
-    
+
     if (selectedCategory !== 'all') {
       result = result.filter(product => product.category === selectedCategory);
     }
-    
+
     setFilteredProducts(result);
   }, [selectedCategory, searchTerm, products]);
 
@@ -174,19 +180,19 @@ const GymStore = () => {
       showSnackbar('Please login to add items to cart', 'error');
       return;
     }
-  
+
     try {
-      await axios.post(backendURL+'/cart', {
+      await axios.post(backendURL + '/cart', {
         userId: user.id,
         productId: product._id,
         quantity: 1
       }, {
         withCredentials: true
       });
-      
-      const res = await axios.get(backendURL+`/getcart/${user.id}`, { withCredentials: true });
+
+      const res = await axios.get(backendURL + `/getcart/${user.id}`, { withCredentials: true });
       setCartItems(res.data.items || []);
-      
+
       showSnackbar(`${product.name} added to cart`, 'success');
     } catch (err) {
       showSnackbar('Failed to add item to cart', 'error');
@@ -198,11 +204,11 @@ const GymStore = () => {
     if (!user) return;
 
     try {
-      await axios.delete(backendURL+`/removefromcart/${user.id}/${cartItemId}`, {
+      await axios.delete(backendURL + `/removefromcart/${user.id}/${cartItemId}`, {
         withCredentials: true
       });
       showSnackbar('Item removed from cart', 'info');
-      const res = await axios.get(backendURL+`/getcart/${user.id}`, { withCredentials: true });
+      const res = await axios.get(backendURL + `/getcart/${user.id}`, { withCredentials: true });
       setCartItems(res.data.items || []);
     } catch (err) {
       showSnackbar('Failed to remove item from cart', 'error');
@@ -236,37 +242,36 @@ const GymStore = () => {
   };
 
   const checkout = async () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) {
-    showSnackbar('Please login to checkout', 'error');
-    return;
-  }
-
-  try {
-    setCartLoading(true);
-    const response = await axios.post(`${backendURL}/checkout`, {
-      userId: user.id
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    });
-    
-    showSnackbar('Order placed successfully!', 'success');
-    setCartItems([]);
-    setShowCart(false); // Close cart after successful checkout
-  } catch (err) {
-    console.error('Checkout error:', err);
-    showSnackbar('Failed to place order', 'error');
-    if (err.response) {
-      console.error('Server response:', err.response.data);
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      showSnackbar('Please login to checkout', 'error');
+      return;
     }
-  } finally {
-    setCartLoading(false);
-  }
-};
 
+    try {
+      setCartLoading(true);
+      const response = await axios.post(`${backendURL}/checkout`, {
+        userId: user.id
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
+
+      showSnackbar('Order placed successfully!', 'success');
+      setCartItems([]);
+      setShowCart(false); // Close cart after successful checkout
+    } catch (err) {
+      console.error('Checkout error:', err);
+      showSnackbar('Failed to place order', 'error');
+      if (err.response) {
+        console.error('Server response:', err.response.data);
+      }
+    } finally {
+      setCartLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -288,10 +293,10 @@ const GymStore = () => {
 
   if (error) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100vh',
         textAlign: 'center',
         p: 3
@@ -299,8 +304,8 @@ const GymStore = () => {
         <Alert severity="error" sx={{ maxWidth: 600 }}>
           <Typography variant="h6" gutterBottom>Error loading products</Typography>
           <Typography>{error}</Typography>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             sx={{ mt: 2 }}
             onClick={() => window.location.reload()}
           >
@@ -312,15 +317,15 @@ const GymStore = () => {
   }
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       backgroundColor: theme.palette.background.default,
     }}>
       {/* Header Section */}
       <HeaderBox>
         <Container maxWidth="xl">
-          <Box sx={{ 
-            display: 'flex', 
+          <Box sx={{
+            display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -328,22 +333,24 @@ const GymStore = () => {
             py: 1
           }}>
             <Box>
-              <Typography variant="h4" sx={{ 
+              <Typography variant="h4" sx={{
                 fontWeight: 600,
-                textShadow: '1px 1px 3px rgba(0,0,0,0.2)'
+                textShadow: '1px 1px 3px rgba(0,0,0,0.2)',
+                fontSize: { xs: '1.8rem', sm: '2.125rem' }
               }}>
                 Gym Store
               </Typography>
-              <Typography variant="h6" sx={{ 
+              <Typography variant="h6" sx={{
                 mb: 1,
                 fontWeight: 400,
+                fontSize: { xs: '1rem', sm: '1.25rem' }
               }}>
-                Premium supplements, gear, and apparel 
+                Premium supplements, gear, and apparel
               </Typography>
             </Box>
-            
-            <Box sx={{ 
-              display: 'flex', 
+
+            <Box sx={{
+              display: 'flex',
               alignItems: 'center',
               gap: 2,
               width: isMobile ? '100%' : 'auto',
@@ -622,9 +629,9 @@ const GymStore = () => {
               </Box>
 
               {filteredProducts.length > 0 ? (
-                <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
+                <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
                   {filteredProducts.map(product => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product._id} sx={{height:'540px',width:'auto'}}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product._id} sx={{ height: { xs: 'auto', sm: '540px' }, width: 'auto' }}>
                       <ProductCard>
                         <Box sx={{ position: 'relative', pt: '100%', }}>
                           <CardMedia

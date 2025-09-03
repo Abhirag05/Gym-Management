@@ -39,7 +39,13 @@ import { GymContext } from '../../context/GymContext';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: '#1e1e1e',
-  padding: theme.spacing(4),
+  padding: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3)
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4)
+  },
   borderRadius: '16px',
   maxWidth: '800px',
   width: '100%',
@@ -50,10 +56,17 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const FeatureChip = styled(Chip)(({ theme }) => ({
-  margin: theme.spacing(0.5),
+  margin: theme.spacing(0.3),
+  [theme.breakpoints.up('sm')]: {
+    margin: theme.spacing(0.5)
+  },
   backgroundColor: 'rgba(255, 65, 108, 0.1)',
   border: '1px solid rgba(255, 65, 108, 0.3)',
   color: '#ff9eaa',
+  fontSize: '0.75rem',
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '0.8125rem'
+  }
 }));
 
 const UserPlans = () => {
@@ -150,8 +163,19 @@ const UserPlans = () => {
     >
       {admission ? (
         <StyledPaper elevation={6}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: isMobile ? 'flex-start' : 'center', 
+            mb: 3,
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? 2 : 0
+          }}>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              width: isMobile ? '100%' : 'auto'
+            }}>
               <Badge
                 overlap="circular"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -166,17 +190,17 @@ const UserPlans = () => {
                 <Avatar
                   sx={{
                     bgcolor: '#ff416c',
-                    width: 64,
-                    height: 64,
-                    fontSize: '1.5rem',
+                    width: isMobile ? 48 : 64,
+                    height: isMobile ? 48 : 64,
+                    fontSize: isMobile ? '1.2rem' : '1.5rem',
                     boxShadow: '0 0 0 2px #ff416c'
                   }}
                 >
                   {admission.fullname?.charAt(0).toUpperCase()}
                 </Avatar>
               </Badge>
-              <Box sx={{ ml: 2 }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              <Box sx={{ ml: isMobile ? 1.5 : 2 }}>
+                <Typography variant={isMobile ? 'h6' : 'h5'} sx={{ fontWeight: 'bold' }}>
                   {admission.fullname}
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#aaa' }}>
@@ -206,7 +230,13 @@ const UserPlans = () => {
             {/* Left Section */}
             <Grid size={{ xs: 12, md: 6 }}>
               {/* Details */}
-              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', color: '#ff9eaa', width: '500px' }}>
+              <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ 
+                mb: 2, 
+                display: 'flex', 
+                alignItems: 'center', 
+                color: '#ff9eaa',
+                width: isMobile ? '100%' : 'auto'
+              }}>
                 <Person sx={{ mr: 1 }} /> Member Details
               </Typography>
               <Box sx={{ backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', p: 2, mb: 2 }}>
@@ -217,7 +247,12 @@ const UserPlans = () => {
               </Box>
 
               {/* Membership Status */}
-              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', color: '#ff9eaa' }}>
+              <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ 
+                mb: 2, 
+                display: 'flex', 
+                alignItems: 'center', 
+                color: '#ff9eaa'
+              }}>
                 <AccessTime sx={{ mr: 1 }} /> Membership Status
               </Typography>
               <Box sx={{ backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', p: 2, mb: 2 }}>
@@ -253,7 +288,12 @@ const UserPlans = () => {
             {/* Right Section */}
             <Grid size={{ xs: 12, md: 6 }}>
               {/* Plan Features */}
-              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', color: '#ff9eaa' }}>
+              <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ 
+                mb: 2, 
+                display: 'flex', 
+                alignItems: 'center', 
+                color: '#ff9eaa'
+              }}>
                 <LocalOffer sx={{ mr: 1 }} /> Plan Features
               </Typography>
               <Box sx={{ backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', p: 2, mb: 2 }}>
@@ -268,7 +308,12 @@ const UserPlans = () => {
               </Box>
 
               {/* Payment Info */}
-              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', color: '#ff9eaa' }}>
+              <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ 
+                mb: 2, 
+                display: 'flex', 
+                alignItems: 'center', 
+                color: '#ff9eaa'
+              }}>
                 <Payment sx={{ mr: 1 }} /> Payment Info
               </Typography>
               <Box sx={{ backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', p: 2, mb: 2 }}>
@@ -299,7 +344,13 @@ const UserPlans = () => {
 
           <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: isMobile ? 'center' : 'space-between', 
+            flexDirection: isMobile ? 'column' : 'row',
+            flexWrap: 'wrap', 
+            gap: 2 
+          }}>
             <Button
               variant="contained"
               startIcon={<Edit />}
@@ -342,8 +393,16 @@ const UserPlans = () => {
           </Box>
         </StyledPaper>
       ) : (
-        <Box sx={{ textAlign: 'center', maxWidth: '500px' }}>
-          <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: 'white' }}>
+        <Box sx={{ 
+          textAlign: 'center', 
+          maxWidth: isMobile ? '90%' : '500px',
+          px: isMobile ? 2 : 0
+        }}>
+          <Typography variant={isMobile ? 'h5' : 'h4'} sx={{ 
+            mb: 2, 
+            fontWeight: 'bold', 
+            color: 'white'
+          }}>
             No Active Membership
           </Typography>
           <Typography variant="body1" sx={{ mb: 3, color: '#aaa' }}>

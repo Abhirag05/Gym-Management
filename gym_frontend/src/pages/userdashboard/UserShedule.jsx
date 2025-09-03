@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Grid, Card, CardContent, Divider, Chip, Button, Avatar, LinearProgress, Tabs, Tab } from '@mui/material';
+import { Box, Typography, Paper, Grid, Card, CardContent, Divider, Chip, Button, Avatar, LinearProgress, Tabs, Tab, useTheme, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { FitnessCenter, DirectionsRun, SelfImprovement, Timer, TrendingUp, Restaurant, Spa } from '@mui/icons-material';
 import { styled } from '@mui/system';
@@ -35,7 +35,7 @@ const DayCard = ({ day, activities, icon }) => {
   return (
     <Grid size={{ xs: 12, sm: 6, md: 4 }}>
       <StyledCard>
-        <CardContent sx={{ padding: '24px' }}>
+        <CardContent sx={{ padding: { xs: '16px', sm: '20px', md: '24px' } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Avatar sx={{ bgcolor: '#ff416c', mr: 2 }}>
               {IconComponent}
@@ -63,6 +63,9 @@ const UserSchedule = () => {
   const [admission, setAdmission] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [progress, setProgress] = useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -203,20 +206,41 @@ const UserSchedule = () => {
     >
       {admission ? (
         <>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: isMobile ? 'flex-start' : 'center', 
+            mb: 4,
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? 3 : 0
+          }}>
             <Box>
-              <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 1 }}>
+              <Typography variant={isMobile ? 'h5' : 'h4'} sx={{ 
+                color: 'white', 
+                fontWeight: 'bold', 
+                mb: 1,
+                textAlign: isMobile ? 'center' : 'left'
+              }}>
                 Your Personalized Workout Plan
               </Typography>
-              <Typography variant="h6" sx={{ color: '#ff416c' }}>
+              <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ 
+                color: '#ff416c',
+                textAlign: isMobile ? 'center' : 'left'
+              }}>
                 {workoutPlan?.title}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: isMobile ? 1 : 0,
+              width: isMobile ? '100%' : 'auto'
+            }}>
               <Typography variant="body1" sx={{ mr: 2 }}>
                 Weekly Progress
               </Typography>
-              <Box sx={{ width: '150px' }}>
+              <Box sx={{ width: isMobile ? '100%' : '150px', maxWidth: '200px' }}>
                 <LinearProgress 
                   variant="determinate" 
                   value={progress} 
@@ -239,10 +263,16 @@ const UserSchedule = () => {
           <Tabs 
             value={activeTab} 
             onChange={handleTabChange} 
+            variant={isMobile ? 'scrollable' : 'standard'}
+            scrollButtons={isMobile ? 'auto' : false}
             sx={{ 
               mb: 4,
               '& .MuiTabs-indicator': {
                 backgroundColor: '#ff416c'
+              },
+              '& .MuiTab-root': {
+                fontSize: isMobile ? '0.8rem' : '0.875rem',
+                minWidth: isMobile ? 'auto' : '160px'
               }
             }}
           >
@@ -264,7 +294,11 @@ const UserSchedule = () => {
                 ))}
               </Grid>
 
-              <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+              <Box sx={{ 
+                mt: 4, 
+                display: 'flex', 
+                justifyContent: isMobile ? 'center' : 'flex-end' 
+              }}>
                 <Button 
                   variant="contained" 
                   sx={{
@@ -328,8 +362,16 @@ const UserSchedule = () => {
           )}
         </>
       ) : (
-        <Box sx={{ textAlign: 'center', mt: 10 }}>
-          <Typography variant="h4" sx={{ mb: 3, color: 'white', fontWeight: 'bold' }}>
+        <Box sx={{ 
+          textAlign: 'center', 
+          mt: isMobile ? 6 : 10,
+          px: isMobile ? 2 : 0
+        }}>
+          <Typography variant={isMobile ? 'h5' : 'h4'} sx={{ 
+            mb: 3, 
+            color: 'white', 
+            fontWeight: 'bold'
+          }}>
             No Active Plan Found
           </Typography>
           <Typography variant="body1" sx={{ color: '#aaa', mb: 4 }}>
@@ -340,9 +382,9 @@ const UserSchedule = () => {
             sx={{
               background: 'linear-gradient(45deg, #ff416c, #ff4b2b)',
               borderRadius: '50px',
-              padding: '12px 32px',
+              padding: isMobile ? '10px 24px' : '12px 32px',
               fontWeight: 'bold',
-              fontSize: '1.1rem',
+              fontSize: isMobile ? '1rem' : '1.1rem',
               '&:hover': {
                 background: 'linear-gradient(45deg, #ff4b2b, #ff416c)',
               }

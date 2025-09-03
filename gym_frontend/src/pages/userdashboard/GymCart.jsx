@@ -12,7 +12,8 @@ import {
   Container,
   Avatar,
   Alert,
-  useTheme
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import {
   ShoppingCart,
@@ -26,6 +27,8 @@ import { useNavigate } from 'react-router-dom';
 const GymCart = ({ cart, removeFromCart, checkout }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const getTotal = () => 
     cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0).toFixed(2);
@@ -39,9 +42,12 @@ const GymCart = ({ cart, removeFromCart, checkout }) => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <Container maxWidth="md" sx={{ 
+      py: isMobile ? 2 : 4,
+      px: isMobile ? 1 : 3
+    }}>
       <Paper elevation={2} sx={{
-        p: 3,
+        p: isMobile ? 2 : 3,
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: 2
       }}>
@@ -49,13 +55,18 @@ const GymCart = ({ cart, removeFromCart, checkout }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: 3
+          mb: 3,
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? 2 : 0
         }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton onClick={() => navigate('/')}>
               <ArrowBack />
             </IconButton>
-            <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            <Typography variant={isMobile ? 'h5' : 'h4'} sx={{ 
+              fontWeight: 600,
+              textAlign: isMobile ? 'center' : 'left'
+            }}>
               Your Shopping Cart
             </Typography>
           </Box>
@@ -133,15 +144,15 @@ const GymCart = ({ cart, removeFromCart, checkout }) => {
                       src={backendURL+`${item.imageUrl}`}
                       alt={item.name} 
                       sx={{ 
-                        width: 64, 
-                        height: 64, 
-                        mr: 3,
+                        width: isMobile ? 48 : 64, 
+                        height: isMobile ? 48 : 64, 
+                        mr: isMobile ? 2 : 3,
                         borderRadius: 1
                       }}
                     />
                     <ListItemText 
                       primary={
-                        <Typography variant="h6" fontWeight={500}>
+                        <Typography variant={isMobile ? 'body1' : 'h6'} fontWeight={500}>
                           {item.name}
                         </Typography>
                       } 
@@ -195,7 +206,11 @@ const GymCart = ({ cart, removeFromCart, checkout }) => {
                 <Typography variant="h5" fontWeight={700}>${getTotal()}</Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: isMobile ? 1 : 2,
+              flexDirection: isMobile ? 'column' : 'row'
+            }}>
               <Button
                 variant="outlined"
                 color="primary"
@@ -228,14 +243,20 @@ const GymCart = ({ cart, removeFromCart, checkout }) => {
             </Box>
             <Box sx={{ 
               display: 'flex', 
-              alignItems: 'center', 
+              alignItems: isMobile ? 'flex-start' : 'center', 
               mt: 3,
               color: 'text.secondary',
-              p: 2,
+              p: isMobile ? 1.5 : 2,
               backgroundColor: 'rgba(0, 0, 0, 0.02)',
-              borderRadius: 1
+              borderRadius: 1,
+              flexDirection: isMobile ? 'column' : 'row',
+              textAlign: isMobile ? 'center' : 'left'
             }}>
-              <VerifiedUser fontSize="large" sx={{ mr: 2, color: theme.palette.success.main }} />
+              <VerifiedUser fontSize={isMobile ? 'medium' : 'large'} sx={{ 
+                mr: isMobile ? 0 : 2, 
+                mb: isMobile ? 1 : 0,
+                color: theme.palette.success.main 
+              }} />
               <Box>
                 <Typography variant="body1" fontWeight={500}>
                   Secure Checkout

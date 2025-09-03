@@ -203,7 +203,10 @@ const UserProfile = () => {
         {/* Header Section */}
         <Grid size={12}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            <Typography variant="h4" sx={{ 
+              fontWeight: 'bold',
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' }
+            }}>
               Welcome back, <span style={{ color: '#ff416c' }}>{user.name}</span>
             </Typography>
           </Box>
@@ -221,12 +224,13 @@ const UserProfile = () => {
             elevation={6}
             sx={{
               backgroundColor: '#fff',
-              padding: 3,
+              padding: { xs: 2, sm: 3 },
               borderRadius: 3,
               height: '100%',
               borderLeft: '2px solid #ff416c',
               borderRight: '2px solid #ff416c',
-              width: '300px'
+              width: { xs: '100%', md: '300px' },
+              maxWidth: '100%'
             }}
           >
             <Box display="flex" flexDirection="column" alignItems="center">
@@ -238,28 +242,28 @@ const UserProfile = () => {
                 }
                 alt="User"
                 sx={{
-                  width: 120,
-                  height: 120,
+                  width: { xs: 100, sm: 120 },
+                  height: { xs: 100, sm: 120 },
                   mb: 2,
                   border: '3px solid #ff416c',
                   boxShadow: '0 4px 20px rgba(255, 65, 108, 0.3)'
                 }}
               />
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
                 {user.name}
               </Typography>
-              <Typography variant="body2" color="textSecondary" gutterBottom>
+              <Typography variant="body2" color="textSecondary" gutterBottom sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
                 Member since {user.joinDate}
               </Typography>
               
               <Divider sx={{ width: '100%', my: 2, bgcolor: 'rgba(255,255,255,0.1)' }} />
 
               <Box width="100%" mb={2}>
-                <Typography variant="body2" sx={{ mb: 1 }}>Email: {user.email}</Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>Age: {user.age} years</Typography>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body2">Weight: {user.weight} kg</Typography>
-                  <Typography variant="body2">Height: {user.height} cm</Typography>
+                <Typography variant="body2" sx={{ mb: 1, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>Email: {user.email}</Typography>
+                <Typography variant="body2" sx={{ mb: 1, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>Age: {user.age} years</Typography>
+                <Box display="flex" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={{ xs: 1, sm: 0 }}>
+                  <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>Weight: {user.weight} kg</Typography>
+                  <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>Height: {user.height} cm</Typography>
                 </Box>
               </Box>
 
@@ -302,7 +306,7 @@ const UserProfile = () => {
                   Your Stats
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<FitnessCenter />} 
                       value={stats.workoutsCompleted} 
@@ -310,7 +314,7 @@ const UserProfile = () => {
                       color="#ff416c"
                     />
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<LocalFireDepartment />} 
                       value={stats.caloriesBurned} 
@@ -318,7 +322,7 @@ const UserProfile = () => {
                       color="#ff9e2c"
                     />
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<TrendingUp />} 
                       value={stats.streak} 
@@ -326,7 +330,7 @@ const UserProfile = () => {
                       color="#4caf50"
                     />
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                     <StatCard 
                       icon={<AccessTime />} 
                       value={stats.nextSession} 

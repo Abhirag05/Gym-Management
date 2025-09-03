@@ -181,14 +181,15 @@ const Home = () => {
       <Box
         sx={{
           position: 'relative',
-          height: '100vh',
-          minHeight: '700px',
+          height: { xs: '100vh', sm: '100vh' },
+          minHeight: { xs: '600px', sm: '700px' },
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           marginBottom: 0,
+          px: { xs: 2, sm: 4 }
         }}
       >
         {/* Background Image */}
@@ -226,12 +227,14 @@ const Home = () => {
           <motion.h1 
             style={{ 
               color: 'white', 
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)', 
+              fontSize: 'clamp(1.8rem, 8vw, 3.5rem)', 
               marginBottom: '1rem',
               fontWeight: 700,
               textShadow: '2px 2px 8px rgba(0,0,0,0.5)',
               lineHeight: 1.2,
-              transformOrigin: 'center bottom'
+              transformOrigin: 'center bottom',
+              textAlign: 'center',
+              padding: '0 10px'
             }}
           >
             "Surpass Your Limits"
@@ -239,11 +242,13 @@ const Home = () => {
           <motion.p 
             style={{ 
               color: 'white', 
-              fontSize: 'clamp(1.2rem, 2.5vw, 1.8rem)',
+              fontSize: 'clamp(1rem, 4vw, 1.8rem)',
               textShadow: '1px 1px 4px rgba(0,0,0,0.5)',
               marginTop: '1rem',
               transformOrigin: 'center top',
-              transitionDelay: '0.2s'
+              transitionDelay: '0.2s',
+              textAlign: 'center',
+              padding: '0 10px'
             }}
           >
             Right here, Right Now
@@ -266,18 +271,19 @@ const Home = () => {
         whileTap={{ scale: 0.98 }}
         sx={{ 
           fontWeight: 600,
-          fontSize: '1.2rem',
-          padding: '12px 32px',
+          fontSize: { xs: '1rem', sm: '1.2rem' },
+          padding: { xs: '10px 24px', sm: '12px 32px' },
           borderRadius: '50px',
-          backgroundcolor: 'white',
-          color:' #ff416c',
+          backgroundColor: 'white',
+          color: '#ff416c',
           backdropFilter: 'blur(5px)',
           border: '1px solid rgba(255,255,255,0.2)',
           textTransform: 'none',
           letterSpacing: '1px',
           transition: 'all 0.3s ease',
           '&:hover': { 
-            backgroundcolor:' #ff416c',
+            backgroundColor: '#ff416c',
+            color: 'white'
           }
         }}
       >
@@ -371,7 +377,7 @@ const Home = () => {
         <Box
           ref={ref}
           sx={{
-            padding: '150px 20px 100px',
+            padding: { xs: '80px 20px 60px', sm: '120px 20px 80px', md: '150px 20px 100px' },
             position: 'relative',
             background: 'linear-gradient(to bottom, #0f0f0f, #1a1a1a)',
             '&::before': {
@@ -380,7 +386,7 @@ const Home = () => {
               top: 0,
               left: 0,
               right: 0,
-              height: '150px',
+              height: { xs: '80px', sm: '120px', md: '150px' },
               zIndex: 1
             }
           }}
@@ -399,11 +405,12 @@ const Home = () => {
             <motion.h2 
               variants={fadeInUp}
               style={{ 
-                fontSize: 'clamp(2rem, 5vw, 3rem)', 
+                fontSize: 'clamp(1.8rem, 6vw, 3rem)', 
                 marginBottom: '2rem',
                 textAlign: 'center',
                 fontWeight: 700,
-                color: '#ff6b6b'
+                color: '#ff6b6b',
+                padding: '0 10px'
               }}
             >
               About Us
@@ -413,10 +420,11 @@ const Home = () => {
               <Box sx={{
                 textAlign: 'center',
                 color: 'rgba(255,255,255,0.9)',
-                fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+                fontSize: 'clamp(0.9rem, 3vw, 1.2rem)',
                 lineHeight: 1.8,
                 maxWidth: '800px',
-                margin: '0 auto'
+                margin: '0 auto',
+                px: { xs: 2, sm: 3 }
               }}>
                 <p>
                   "Fit For Fight is a premium fitness facility dedicated to transforming lives through world-class training, personalized programs, and community support. Founded with a passion for fitness, we empower members to become stronger — physically and mentally."
@@ -430,7 +438,7 @@ const Home = () => {
         <Box
           ref={ref2}
           sx={{
-            padding: '100px 20px',
+            padding: { xs: '60px 20px', sm: '80px 20px', md: '100px 20px' },
             background: 'linear-gradient(to bottom, #1a1a1a, #252525)',
             position: 'relative'
           }}
@@ -493,13 +501,11 @@ const Home = () => {
                   style={{
                     backgroundColor: '#1a1a1a',
                     borderRadius: '10px',
-                    padding: '30px',
+                    padding: '25px',
                     boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
                     transition: 'transform 0.3s ease',
                     border: '1px solid rgba(255,107,107,0.2)',
-                    '&:hover': {
-                      transform: 'translateY(-10px)'
-                    }
+                    minHeight: '280px'
                   }}
                 >
                   <Box sx={{ 
@@ -545,7 +551,7 @@ const Home = () => {
         <Box
           ref={ref3}
           sx={{
-            padding: '100px 20px',
+            padding: { xs: '60px 20px', sm: '80px 20px', md: '100px 20px' },
             background: 'linear-gradient(to bottom, #252525, #1a1a1a)',
             position: 'relative'
           }}
@@ -587,7 +593,7 @@ const Home = () => {
                 },
                 {
                   question: "Combat Training or Sports Fitness?",
-                  answer: "Yes! From MMA and boxing to athletic performance drills, we offer combat and sports-oriented fitness training to build real-world strength, agility, and endurance."
+                  answer: "Yes! From MMA and boxing to athletic performance drills, we offer combat and sports-oriented fitness training to build real-world agility."
                 }
               ].map((item, index) => (
                 <motion.div key={index} variants={itemVariants}>
@@ -605,7 +611,7 @@ const Home = () => {
         <Box
           ref={ref4}
           sx={{
-            padding: '100px 20px',
+            padding: { xs: '60px 20px', sm: '80px 20px', md: '100px 20px' },
             background: 'linear-gradient(to bottom, #1a1a1a, #252525)',
             position: 'relative'
           }}
@@ -651,7 +657,8 @@ const Home = () => {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '30px'
+                gap: '20px',
+                padding: '0 10px'
               }}
             >
               {[
@@ -734,7 +741,7 @@ const Home = () => {
         <Box
           ref={ref5}
           sx={{
-            padding: '100px 20px',
+            padding: { xs: '60px 20px', sm: '80px 20px', md: '100px 20px' },
             background: 'linear-gradient(to bottom, #252525, #1a1a1a)',
             position: 'relative'
           }}
@@ -911,8 +918,8 @@ const Home = () => {
           role="presentation"
           sx={{
             position: 'fixed',
-            bottom: '32px',
-            right: '32px',
+            bottom: { xs: '20px', sm: '32px' },
+            right: { xs: '20px', sm: '32px' },
             zIndex: 1000
           }}
         >
@@ -925,14 +932,14 @@ const Home = () => {
       </Zoom>
           {/* CTA Section */}
 <Box
-  sx={{
-    padding: { xs: '80px 20px', md: '120px 20px' },
-    background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
-    color: 'white',
-    textAlign: 'center',
-    position: 'relative',
-    overflow: 'hidden'
-  }}
+        sx={{
+          padding: { xs: '60px 20px', sm: '80px 20px', md: '120px 20px' },
+          background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
+          color: 'white',
+          textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
 >
   {/* Decorative elements */}
   <Box 
