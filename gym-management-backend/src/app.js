@@ -80,7 +80,7 @@ const cartController = require('./controllers/cartController');
 const orderController = require('./controllers/orderController');
 const { verifyToken, verifyAdmin } = require('./middleware/auth');
 const upload = require('./middleware/upload');
-const { fileUpload } = require('./utils/fileUpload');
+const cloudinaryUpload = require('./utils/cloudinaryUpload');
 
 // Auth routes
 app.post('/register', authController.register);
@@ -107,10 +107,10 @@ app.get('/viewcontact', verifyToken, verifyAdmin, contactController.getAllContac
 app.delete('/dltmsg/:id', verifyToken, verifyAdmin, contactController.deleteContact);
 
 // Product routes
-app.post('/products', verifyToken, verifyAdmin, fileUpload.single('image'), productController.createProduct);
+app.post('/products', verifyToken, verifyAdmin, cloudinaryUpload.single('image'), productController.createProduct);
 app.get('/viewproducts', productController.getAllProducts);
 app.get('/viewproducts/:id', productController.getProductById);
-app.put('/products/:id', verifyToken, verifyAdmin, fileUpload.single('image'), productController.updateProduct);
+app.put('/products/:id', verifyToken, verifyAdmin, cloudinaryUpload.single('image'), productController.updateProduct);
 app.delete('/products/:id', verifyToken, verifyAdmin, productController.deleteProduct);
 
 // Cart routes

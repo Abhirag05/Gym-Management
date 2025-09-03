@@ -25,6 +25,10 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  cloudinaryPublicId: {
+    type: String,
+    default: null
+  },
   stock: {
     type: Number,
     default: 0,

@@ -1,6 +1,5 @@
 const Product = require('../models/Product');
-const path = require('path');
-const fs = require('fs');
+const cloudinary = require('../config/cloudinary');
 
 const productController = {
   // Create new product
@@ -10,8 +9,15 @@ const productController = {
         return res.status(400).json({ message: "No image uploaded" });
       }
 
-      // For serverless deployment, store image as base64 or use cloud storage
-      // For now, we'll store a placeholder since file system is not available
+      // Upload image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'gym-products',
+        transformation: [
+          { width: 500, height: 500, crop: 'limit' },
+          { quality: 'auto' }
+        ]
+      });
+
       const productData = {
         name: req.body.name,
         price: req.body.price,
@@ -21,7 +27,8 @@ const productController = {
         brand: req.body.brand,
         flavors: req.body.flavors ? JSON.parse(req.body.flavors) : [],
         sizes: req.body.sizes ? JSON.parse(req.body.sizes) : [],
-        imageUrl: req.file ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` : null
+        imageUrl: result.secure_url,
+        cloudinaryPublicId: result.public_id
       };
 
       const newProduct = new Product(productData);
@@ -89,8 +96,22 @@ const productController = {
 
       // Handle image update if new image is provided
       if (req.file) {
-        // For serverless deployment, store image as base64
-        updateData.imageUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+        // Delete old image from Cloudinary if exists
+        if (product.cloudinaryPublicId) {
+          await cloudinary.uploader.destroy(product.cloudinaryPublicId);
+        }
+
+        // Upload new image to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: 'gym-products',
+          transformation: [
+            { width: 500, height: 500, crop: 'limit' },
+            { quality: 'auto' }
+          ]
+        });
+
+        updateData.imageUrl = result.secure_url;
+        updateData.cloudinaryPublicId = result.public_id;
       }
 
       const updatedProduct = await Product.findByIdAndUpdate(
@@ -120,12 +141,9 @@ const productController = {
         return res.status(404).json({ message: "Product not found" });
       }
 
-      // Delete image file if exists
-      if (product.imageUrl) {
-        const imagePath = path.join(__dirname, '../../uploads', path.basename(product.imageUrl));
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
-        }
+      // Delete image from Cloudinary if exists
+      if (product.cloudinaryPublicId) {
+        await cloudinary.uploader.destroy(product.cloudinaryPublicId);
       }
 
       await Product.findByIdAndDelete(req.params.id);

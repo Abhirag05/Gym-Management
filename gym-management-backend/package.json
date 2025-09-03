@@ -10,17 +10,25 @@
     "vercel-build": "echo Build completed",
     "test": "echo Error: no test specified"
   },
-  "keywords": ["gym", "management", "api", "nodejs", "express"],
+  "keywords": [
+    "gym",
+    "management",
+    "api",
+    "nodejs",
+    "express"
+  ],
   "author": "Abhirag",
   "license": "MIT",
   "dependencies": {
+    "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.0",
-    "multer": "^1.4.5-lts.2"
+    "multer": "^1.4.5-lts.2",
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
