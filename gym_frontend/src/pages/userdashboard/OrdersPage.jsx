@@ -1,15 +1,17 @@
 // OrdersPage.js
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, List, ListItem, Divider, Chip, ListItemAvatar, Avatar } from '@mui/material';
-import { LocalShipping, CheckCircle, AccessTime } from '@mui/icons-material';
+import { Box, Typography, Paper, List, ListItem, Divider, Chip, ListItemAvatar, Avatar, Button, IconButton } from '@mui/material';
+import { LocalShipping, CheckCircle, AccessTime, ArrowBack, ShoppingBag } from '@mui/icons-material';
 import axios from 'axios';
 import { useContext } from 'react';
 import { GymContext } from '../../context/GymContext';
+import { useNavigate } from 'react-router-dom';
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const { backendURL } = useContext(GymContext);
   const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -35,7 +37,40 @@ const OrdersPage = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h4" gutterBottom sx={{color:'white'}}> My Orders</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
+        <IconButton 
+          onClick={() => navigate('/user/gymstore')}
+          sx={{ 
+            color: '#ff416c',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 65, 108, 0.1)'
+            }
+          }}
+        >
+          <ArrowBack />
+        </IconButton>
+        <Typography variant="h4" sx={{color:'white', flexGrow: 1}}>
+          My Orders
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<ShoppingBag />}
+          onClick={() => navigate('/user/gymstore')}
+          sx={{
+            background: 'linear-gradient(45deg, #ff416c, #ff4b2b)',
+            borderRadius: '50px',
+            px: 3,
+            py: 1,
+            fontWeight: 'bold',
+            textTransform: 'none',
+            '&:hover': {
+              background: 'linear-gradient(45deg, #ff4b2b, #ff416c)',
+            }
+          }}
+        >
+          Back to Store
+        </Button>
+      </Box>
       
       {orders.length === 0 ? (
         <Typography>No orders yet</Typography>
