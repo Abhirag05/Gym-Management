@@ -14,6 +14,7 @@ const contactRoutes = require('./routes/contacts');
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/carts');
 const orderRoutes = require('./routes/orders');
+const testController = require('./controllers/testController');
 
 // Load environment variables
 require('dotenv').config();
@@ -123,6 +124,10 @@ app.delete('/clearcart/:userId', verifyToken, cartController.clearCart);
 app.post('/checkout', verifyToken, orderController.checkout);
 app.get('/orders/:userId', verifyToken, orderController.getUserOrders);
 app.get('/vieworders', verifyToken, verifyAdmin, orderController.getAllOrders);
+
+// Test routes for debugging
+app.get('/test/cloudinary', testController.testCloudinary);
+app.get('/test/base64-products', testController.getBase64Products);
 
 // Error handling middleware
 app.use(errorHandler);

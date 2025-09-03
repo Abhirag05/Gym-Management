@@ -51,7 +51,18 @@ const productController = {
   getAllProducts: async (req, res) => {
     try {
       const products = await Product.find().sort({ createdAt: -1 });
-      res.json(products);
+      
+      // Filter out products with base64 images in production
+      const filteredProducts = products.filter(product => {
+        // In production, only show products with Cloudinary URLs
+        if (process.env.NODE_ENV === 'production') {
+          return product.imageUrl && !product.imageUrl.startsWith('data:');
+        }
+        // In development, show all products
+        return true;
+      });
+      
+      res.json(filteredProducts);
     } catch (error) {
       console.error('Get products error:', error);
       res.status(500).json({ message: "Error fetching products", error: error.message });
