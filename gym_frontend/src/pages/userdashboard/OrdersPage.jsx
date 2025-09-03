@@ -100,7 +100,7 @@ const OrdersPage = () => {
                   <ListItemAvatar>
                       <Avatar 
                         variant="square"
-                        src={`${backendURL}${item.imageUrl?.startsWith('/') ? item.imageUrl : '/' + item.imageUrl}`} 
+                        src={item.imageUrl?.startsWith('http') ? item.imageUrl : `${backendURL}${item.imageUrl?.startsWith('/') ? item.imageUrl : '/' + item.imageUrl}`} 
                         alt={item.name}
                         sx={{ width: 60, height: 60, mr: 2 }}
                       />

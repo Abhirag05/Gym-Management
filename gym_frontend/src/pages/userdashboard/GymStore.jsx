@@ -636,7 +636,7 @@ const GymStore = () => {
                         <Box sx={{ position: 'relative', pt: '100%', }}>
                           <CardMedia
                             component="img"
-                            image={`${backendURL}${product.imageUrl?.startsWith('/') ? product.imageUrl : '/' + product.imageUrl}`}
+                            image={product.imageUrl?.startsWith('http') ? product.imageUrl : `${backendURL}${product.imageUrl?.startsWith('/') ? product.imageUrl : '/' + product.imageUrl}`}
                             alt={product.name}
                             sx={{ 
                               position: 'absolute',
