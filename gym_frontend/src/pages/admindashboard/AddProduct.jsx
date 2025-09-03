@@ -71,7 +71,9 @@ const AddProduct = () => {
     if (isEditMode) {
       const fetchProduct = async () => {
         try {
-          const response = await axios.get(backendURL+`/viewproducts/${id}`);
+          const response = await axios.get(backendURL+`/viewproducts/${id}`, {
+            withCredentials: true
+          });
           const product = response.data;
           setFormData({
             name: product.name,
@@ -85,7 +87,7 @@ const AddProduct = () => {
           });
           if (product.imageUrl) {
             setExistingImage(product.imageUrl);
-            setImagePreview(backendURL+`${product.imageUrl}`);
+            setImagePreview(product.imageUrl?.startsWith('http') ? product.imageUrl : backendURL+`${product.imageUrl}`);
           }
         } catch (err) {
           setSnackbar({
@@ -549,7 +551,7 @@ const AddProduct = () => {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                   }}>
                     <img 
-                      src={imagePreview || backendURL+`${existingImage}`} 
+                      src={imagePreview || (existingImage?.startsWith('http') ? existingImage : backendURL+`${existingImage}`)} 
                       alt="Preview" 
                       style={{ 
                         width: '100%', 

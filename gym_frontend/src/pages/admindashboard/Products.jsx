@@ -21,7 +21,9 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(backendURL+'/viewproducts');
+      const response = await axios.get(backendURL+'/viewproducts', {
+        withCredentials: true
+      });
       setProducts(response.data);
       setLoading(false);
     } catch (err) {
@@ -32,7 +34,9 @@ const Products = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(backendURL+`/products/${id}`);
+      await axios.delete(backendURL+`/products/${id}`, {
+        withCredentials: true
+      });
       fetchProducts(); // Refresh the list after deletion
     } catch (err) {
       setError(err.message);
@@ -149,7 +153,7 @@ const Products = () => {
                     <TableCell sx={{ color: 'white', py: isSmallScreen ? 1 : 2 }}>
                       {product.imageUrl && (
                         <img 
-                          src={backendURL+`${product.imageUrl}`} 
+                          src={product.imageUrl?.startsWith('http') ? product.imageUrl : backendURL+`${product.imageUrl}`} 
                           alt={product.name} 
                           style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                         />
