@@ -11,10 +11,6 @@ const GymContextProvider = (props) => {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   
-
-  
-
-  
   const value = {
     
     backendURL,
